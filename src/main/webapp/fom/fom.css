@@ -1,0 +1,32 @@
+#container {
+	margin-left: auto;
+	margin-right: auto;
+        width:315px; 
+}
+
+.cell {
+	height:35px;
+	width:35px;
+}	
+
+.board {
+	background-color: #9999ff;
+}
+
+.fom-next-c {
+	border: 0px solid black;
+	height:35px;
+	width:35px;
+	padding: 0;
+	margin:0;
+}
+
+.fom-next-t {
+	border-spacing: 0;
+	border: 0px; 
+	display:inline;
+}
+
+.fom-selected {
+	border: 1px solid red;
+}

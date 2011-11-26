@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+		<script src="debug.js"></script>
+		<script src="board-model.js"></script>
+		<script src="board-view.js"></script>
+		<script src="tic-tac-toe/tic-tac-toe.js"></script>
+		<LINK REL=StyleSheet HREF="board.css" TYPE="text/css"> 
+		<LINK REL=StyleSheet HREF="tic-tac-toe/ttt.css" TYPE="text/css"> 
+		<script>
+			ticTacToe = new TicTacToeModel();
+			function createBoard() {
+				ticTacToeView = new TicTacToeView("#container");
+				ticTacToeView.createTable (ticTacToe);
+				ticTacToe.registerViewHandler(ticTacToeView);
+			}
+			$(document).ready(createBoard);
+		</script>
+	</head>
+	<body>
+		<div id="container">
+			<span></span>
+		</div>
+	</body>
+</html>
+

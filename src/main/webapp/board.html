@@ -1,0 +1,19 @@
+<html>
+	<head>
+		<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+		<script src="board-model.js"></script>
+		<script src="board-view.js"></script>
+		<LINK REL=StyleSheet HREF="board.css" TYPE="text/css"> 
+		<script>
+			function createBoard() {
+				createTable ("#container", 4, 4);
+			}
+			$(document).ready(createBoard);
+		</script>
+	</head>
+	<body>
+		<div id="container">
+			<span></span>
+		</div>
+	</body>
+</html>
