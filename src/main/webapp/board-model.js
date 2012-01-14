@@ -1,30 +1,30 @@
-function Board(rows, cols) {
-	this.boardModel = new Array(rows);
+function BoardModel(rows, cols) {
 	this.rows = rows;
 	this.cols = cols;
 	this.name = "default";
 	this.viewHandlers = [];
+	this.modelChangeListeners = [];
 	this.savedStates = [];
 	this.currentStateIdx = -1;
-	for (var row = 0; row < rows; row++) {
-		this.boardModel[row] = new Array(cols);
-		for (var col = 0; col < cols; col++) {
-			this.boardModel[row][col] = "";
-		}
-	}
+	this.board = BoardUtil.createGrid(this.rows, this.cols, "");
 };
 
-Board.prototype.getCell = function(row, col) {
-	return this.boardModel[row][col];
+BoardModel.prototype.getCell = function(row, col) {
+	return this.board[row][col];
 };
 
-Board.prototype.saveState = function () {
+BoardModel.prototype.setCell = function(row, col, data) {
+	this.board[row][col] = data;
+	this.notifyModelChangeListeners();
+};
+
+BoardModel.prototype.saveState = function () {
 	var state = {};
-	state.boardModel = new Array(this.rows);
+	state.board = new Array(this.rows);
 	for (row = 0; row < this.rows; row++) {
-		state.boardModel[row] = new Array(this.cols);
+		state.board[row] = new Array(this.cols);
 		for (col = 0; col < this.cols; col++) {
-			state.boardModel[row][col] = this.boardModel[row][col];
+			state.board[row][col] = this.board[row][col];
 		}
 	}
 	this.saveChildState(state);
@@ -34,55 +34,65 @@ Board.prototype.saveState = function () {
 	var i = 0;
 }
 
-Board.prototype.back = function () {
+BoardModel.prototype.back = function () {
 	if (this.currentStateIdx > 0) {
 		this.currentStateIdx--;
-		this.boardModel = $.extend(true, [], this.savedStates[this.currentStateIdx].boardModel);
-		this.restoreState (this.savedStates[this.currentStateIdx]);
+		this.restoreState();
 		this.notifyView (this);
 	}
 }
 
-Board.prototype.next = function () {
+BoardModel.prototype.next = function () {
 	if (this.savedStates.length > this.currentStateIdx + 1 ) {
 		this.currentStateIdx++;
-		this.boardModel = $.extend(true, [], this.savedStates[this.currentStateIdx].boardModel);
-		this.restoreState (this.savedStates[this.currentStateIdx]);
+		this.restoreState();
 		this.notifyView (this);
 	}
 }
 
-Board.prototype.restoreState = function (state) {
+BoardModel.prototype.restoreState = function () {
+	this.board = $.extend(true, [], this.savedStates[this.currentStateIdx].board);
+	this.restoreChildState (this.savedStates[this.currentStateIdx]);
 }
 
-Board.prototype.saveChildState = function (state) {
+BoardModel.prototype.saveChildState = function (state) {
 }
 
-Board.prototype.onClickHandler = function (event) {
-	//alert ('hi there' + ' my name is ' + event.data.name + ' and you clicked on row ' + $(this).attr('r') + ' and column ' + $(this).attr('c'));
+BoardModel.prototype.restoreChildState = function (state) {
+}
 
+BoardModel.prototype.onClickHandler = function (event) {
 	bm = event.data;
 	row = $(this).attr('r'); 
 	col = $(this).attr('c'); 
 	bm.onClick(row, col);
 }
 
-Board.prototype.onClick = function (row, col) {
+BoardModel.prototype.onClick = function (row, col) {
 	dbg ('clicked ' + this.name + ' at row ' + row + ' col ' + col, {on:false});
 	this.onClickImpl(row, col);
 	this.notifyView(this);
 }
 
-Board.prototype.notifyView = function (model) {
+BoardModel.prototype.notifyView = function (model) {
 	for (i = 0; i < this.viewHandlers.length; i++) {
 		this.viewHandlers[i].updateView(model);
 	}
 }
 
-Board.prototype.registerViewHandler = function (viewHandler) {
+BoardModel.prototype.registerViewHandler = function (viewHandler) {
 	this.viewHandlers.push(viewHandler);	
 }
 
+BoardModel.prototype.registerModelChangeListener = function (modelChangeListener) {
+	this.modelChangeListeners.push(modelChangeListener);	
+}
+
+BoardModel.prototype.notifyModelChangeListeners = function () {
+	for (i = 0; i < this.modelChangeListeners.length; i++) {
+		this.modelChangeListeners[i].handleModelChange(this);
+	}
+}
 
 function Cell(row, col) {
 	this.r = row;

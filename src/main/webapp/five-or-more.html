@@ -20,6 +20,7 @@
 
 		<script src="jquery-1.6.4.min.js"></script>
 		<script src="debug.js"></script>
+		<script src="board-common.js"></script>
 		<script src="board-model.js"></script>
 		<script src="board-view.js"></script>
 		<script src="fom/astar.js"></script>
@@ -31,8 +32,7 @@
 			function createBoard() {
 				fomView = new FOMView("#container");
 				fomView.createTable (fom);
-				fom.registerViewHandler(fomView);
-				fom.notifyView(fom);
+				fom.notifyModelChangeListeners();
 			}
 			$(document).ready(createBoard);
 		</script>

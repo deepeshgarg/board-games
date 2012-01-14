@@ -1,5 +1,5 @@
 
-FOMModel.prototype = new Board(9, 9);
+FOMModel.prototype = new BoardModel(9, 9);
 FOMModel.prototype.constructor = FOMModel;
 
 function FOMModel() {
@@ -8,7 +8,7 @@ function FOMModel() {
 	this.score = 0;
 	for (var row = 0; row < this.rows; row++) {
 		for (var col = 0; col < this.cols; col++) {
-			this.boardModel[row][col] = "e";
+			this.board[row][col] = "e";
 		}
 	}
 	var initColors = this.getNextColors();
@@ -64,9 +64,9 @@ FOMModel.prototype.processGroups = function() {
 			var grp = this.groups[i];
 			for (var j = 0; j < grp.length; j++) {
 				var c = grp[j];
-				if (this.boardModel[c.r][c.c] != 'e') {
+				if (this.board[c.r][c.c] != 'e') {
 					count++;
-					this.boardModel[c.r][c.c] = 'e';
+					this.board[c.r][c.c] = 'e';
 				}
 			}
 		}
@@ -115,7 +115,7 @@ FOMModel.prototype.getGroupsForCellList = function(cellList) {
 	var prev = '';
 	for (var i = 0; i < cellList.length; i++) {
 		var c = cellList[i];
-		var b = this.boardModel[c.r][c.c]; 
+		var b = this.board[c.r][c.c]; 
 		if (b != 'e') {
 			if (b == prev) {
 				grp.push(new Cell(c.r, c.c));
@@ -148,22 +148,22 @@ FOMModel.prototype.putNextColorsOnBoard = function(colors) {
 	while (colors.length > 0 && ecl.length > 0) {
 		r_idx = Math.floor(Math.random()*ecl.length);
 		c = colors.pop();
-		this.boardModel[ecl[r_idx].r][ecl[r_idx].c] = c;
+		this.board[ecl[r_idx].r][ecl[r_idx].c] = c;
 		ecl.splice(r_idx, 1);
 	}
 }
 
 FOMModel.prototype.onClickImpl = function (row, col) {
-	var val = this.boardModel[row][col];
+	var val = this.board[row][col];
 	var nextColors = false;
 	var saveState = false;
-	if (this.boardModel[row][col] == "e") {
+	if (this.board[row][col] == "e") {
 		if (this.selected != null) {
 			dbg("here1" + val, {on:false});
 			var cellTo = new Cell(row, col);
 			if (this.isThereAWay(this.selected, cellTo)) {
-				this.boardModel[row][col] = this.boardModel[this.selected.r][this.selected.c];   
-				this.boardModel[this.selected.r][this.selected.c] = "e";  
+				this.board[row][col] = this.board[this.selected.r][this.selected.c];   
+				this.board[this.selected.r][this.selected.c] = "e";  
 				nextColors = !this.processGroups();
 				this.selected = null;
 				saveState = true;
@@ -196,7 +196,7 @@ FOMModel.prototype.getEmptyCellList = function () {
 	ecl = [];
 	for (row = 0; row < this.rows; row++) {
 		for (col = 0; col < this.cols; col++) {
-			if (this.boardModel[row][col] == "e") {
+			if (this.board[row][col] == "e") {
 				ecl.push (new Cell(row, col));
 			}
 		}
@@ -209,7 +209,7 @@ FOMModel.prototype.isThereAWay = function (cfrom, cto) {
 	for (var row = 0; row < this.rows; row++) {
 		var mapRow = [];
 		for (var col = 0; col < this.cols; col++) {
-			if (this.boardModel[row][col] != "e") {
+			if (this.board[row][col] != "e") {
 				mapRow.push("u");
 			} else {
 				mapRow.push("w");
@@ -223,7 +223,7 @@ FOMModel.prototype.isThereAWay = function (cfrom, cto) {
 	return (this.path != null);
 }
 
-FOMModel.prototype.restoreState = function (state) {
+FOMModel.prototype.restoreChildState = function (state) {
 	this.nextColors = state.nextColors.slice();
 	this.score = state.score;
 }
@@ -233,6 +233,10 @@ FOMModel.prototype.saveChildState = function (state) {
 	state.score = this.score;
 }
 
+FOMModel.prototype.setSelected = function (cell) {
+	this.selected = cell;
+	this.notifyModelChangeListeners();
+}
 
 FOMView.prototype = new BoardView();
 FOMView.prototype.constructor = FOMView;
@@ -241,7 +245,7 @@ function FOMView(ctnr) {
 	BoardView.call(this, ctnr);
 	this.name = "Five Or More View";
 };
-
+	
 FOMView.prototype.createTable = function (board) {
 	BoardView.prototype.createTable.call(this, board);
 	var head = $( "<TABLE class='fom-next-t'>" + 
@@ -271,28 +275,7 @@ FOMView.prototype.createTable = function (board) {
 	head.find('#next').bind("click", function(){board.next()});
 
 	this.container.prepend(head);
-	/*
-	span = $("<SPAN></SPAN>").addClass("fom-score"); 
-	this.container.prepend(span);
-	span = $("<SPAN>score:</SPAN>").addClass("fom-sl"); 
-	this.container.prepend(span);
-
-	tbl = $("<TABLE></TABLE>").addClass("fom-next-t");
-	rw = $("<TR></TR>");
-	tbl.append(rw);
-	c1 = $("<TD><div><img src='images/blank.gif' width='100%' height='100%'></img></div></TD>").addClass("fom-next-c fom-next-c1");
-	c2 = $("<TD><div><img src='images/blank.gif' width='100%' height='100%'></img></div></TD>").addClass("fom-next-c fom-next-c2");
-	c3 = $("<TD><div><img src='images/blank.gif' width='100%' height='100%'></img></div></TD>").addClass("fom-next-c fom-next-c3");
-	rw.append(c1);
-	rw.append(c2);
-	rw.append(c3);
-	this.container.prepend(tbl);
-	span = $("<SPAN>next:</SPAN>").addClass("fom-next-l"); 
-	this.container.prepend(tbl);
-	this.container.prepend(span);
-	*/
 }
-	
 
 FOMView.prototype.updateView = function (model) {
 	dbg("here", {on:false});
@@ -301,23 +284,15 @@ FOMView.prototype.updateView = function (model) {
 		$(cl).find('img').attr('src', this.getImagePath(model.nextColors[i-1]));
 	}
 	this.container.find('.fom-score').html(model.score);
-	func = this.getImagePath;
-	var allCells = this.container.find(".cell");
-	allCells.removeClass("fom-selected");
-	allCells.each(function (i, elem) {
-		row = $(elem).attr('r'); 
-		col = $(elem).attr('c'); 
-		dbg(row + ' ' + col + ' ' + model.boardModel, {on:false});
-		value = model.boardModel[row][col];
-		imgPath = func(value);
-		$(elem).find('img').attr('src', imgPath);
-	}
-	);
-	if (model.selected != null) {
-		var t1 = $.grep(allCells, function(elm, n){return ($(elm).attr("r") == model.selected.r && $(elm).attr("c") == model.selected.c)});
-		$(t1).addClass("fom-selected");
-	}
+	BoardUtil.forEachCell(0, 0, BoardUtil.nextCellForward, function(r, c, d) {
+				d.view.removeClass(r, c, "fom-selected");
+				d.view.setImage(r, c, d.view.getImagePath(d.model.board[r][c]));
+			},
+			{"model":model, "view":this}, model.rows, model.cols);
 
+	if (model.selected != null) {
+		this.addClass(model.selected.r, model.selected.c, "fom-selected");
+	}
 };
 
 FOMView.prototype.getImagePath = function(c) {
@@ -340,3 +315,51 @@ FOMView.prototype.getImagePath = function(c) {
 	}
 	return 'fom/blank.gif';
 }
+
+FOMView.prototype.onClick = function (boardModel, row, col) {
+	var val = boardModel.board[row][col];
+	var nextColors = false;
+	var saveState = false;
+	if (boardModel.board[row][col] == "e") {
+		if (boardModel.selected != null) {
+			dbg("here1" + val, {on:false});
+			var cellTo = new Cell(row, col);
+			if (boardModel.isThereAWay(boardModel.selected, cellTo)) {
+				boardModel.board[row][col] = boardModel.board[boardModel.selected.r][boardModel.selected.c];   
+				boardModel.board[boardModel.selected.r][boardModel.selected.c] = "e";  
+				nextColors = !boardModel.processGroups();
+				boardModel.selected = null;
+				saveState = true;
+			}
+		}
+	} else {
+		boardModel.setSelected(new Cell(row, col));
+	} 
+	if (nextColors) {
+		boardModel.putNextColorsOnBoard(boardModel.nextColors);
+		boardModel.processGroups();
+		boardModel.nextColors = boardModel.getNextColors();
+	}
+	if (saveState) {
+		boardModel.saveState();
+		boardModel.notifyModelChangeListeners()
+	}
+}
+
+FOMView.prototype.handleModelChange = function (model) {
+	dbg("here", {on:false});
+	for (i = 1; i <= model.nextColors.length; i++) {
+		cl = this.container.find(".fom-next-c" + i);
+		$(cl).find('img').attr('src', this.getImagePath(model.nextColors[i-1]));
+	}
+	this.container.find('.fom-score').html(model.score);
+	BoardUtil.forEachCell(0, 0, BoardUtil.nextCellForward, function(r, c, d) {
+				d.view.removeClass(r, c, "fom-selected");
+				d.view.setImage(r, c, d.view.getImagePath(d.model.board[r][c]));
+			},
+			{"model":model, "view":this}, model.rows, model.cols);
+
+	if (model.selected != null) {
+		this.addClass(model.selected.r, model.selected.c, "fom-selected");
+	}
+};
