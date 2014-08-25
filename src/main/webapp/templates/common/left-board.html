@@ -1,0 +1,8 @@
+<table class="b-table" data-bind="foreach: $root.rcl">
+	<tr class="b-row" data-bind="foreach: $root.rl">
+		<td class="b-cell">
+			<span data-bind="template: {name : $root.cellTemplate, data : {r: $data, c: $parent} }"/>
+		</td>
+	</tr>
+</table>
+

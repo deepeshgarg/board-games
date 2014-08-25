@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html manifest="five-or-more.appcache">	
+	<head>
+		<title>Solitaire Chess</title>
+		<!-- Mobile -->
+		<meta name="viewport" content="user-scalable=yes, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<link rel="apple-touch-icon" href="icons/sc-57x57.png"/>
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="icons/sc-114x114.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="icons/sc-72x72.png" />
+		<link rel="apple-touch-icon-precomposed" href="icons/sc-57x57.png" />
+
+		<!-- Google Chrome -->
+		<meta name="application-name" content="Five or More"/>
+		<meta name="description" content="Popular glines game"/>
+		<meta name="application-url" content="http://pi-board-games.appspot.com/five-or-more.html"/>
+		<link rel="icon" href="icons/sc-32x32.png" sizes="32x32"/>
+		<link rel="icon" href="icons/sc-48x48.png" sizes="48x48"/>
+
+		<script src="jquery-1.6.4.min.js"></script>
+		<script src="debug.js"></script>
+		<script src="board-common.js"></script>
+		<script src="board-model.js"></script>
+		<script src="board-view.js"></script>
+		<script src="sc/sc.js"></script>
+		<script src="sc/puzzles.js"></script>
+		<script src="js/chess.js"></script>
+		<script src="sc/sc-lib.js"></script>
+		<LINK REL=StyleSheet HREF="board.css" TYPE="text/css"> 
+		<LINK REL=StyleSheet HREF="sc/sc.css" TYPE="text/css"> 
+		<script>
+			var sc;
+			function createBoard() {
+				sc = new SCModel();
+				sc.listenerUpdateAuto = true;
+				scView = new SCView("#container");
+				scView.createTable (sc);
+				sc.notifyModelChangeListeners();
+			}
+			$(document).ready([createBoard, loadPuzzles, checkUrl]);
+			
+			var puzzles = {};
+			function loadPuzzles() {
+				puzzles = SC.puzzles;
+				for (var difficulty in puzzles) {
+				 	var opt = $("<option value='" + difficulty + "'>" + difficulty + "</option>");
+				 	$("#difficulty").append(opt);
+				}
+				$("#difficulty").children().first().attr("selected", "1");
+				difficultyChanged();
+			}
+			
+			var diff_level_map = {};
+			function difficultyChanged() {
+				var diffSelect = $("#difficulty");
+				var selectedDifficulty = diffSelect.val();
+				var levelSelect = $("#puzzle-id");
+				levelSelect.children().detach();
+				if (!(selectedDifficulty in diff_level_map)) {
+					var options = [];
+					for (var level in puzzles[selectedDifficulty]) {
+						if (level != undefined) {
+					 		var opt = $("<option value='" + level + "'>" + level + "</option>");
+					 		levelSelect.append(opt);
+					 	}
+					}
+					diff_level_map[selectedDifficulty] = levelSelect.children();
+				} else {
+					levelSelect.append(diff_level_map[selectedDifficulty]);
+				}
+				levelSelect.children().first().attr("selected", "1");
+				loadLevel(selectedDifficulty, levelSelect.val());
+			}
+			
+			function levelChanged() {
+				var diffSelect = $("#difficulty");
+				var selectedDifficulty = diffSelect.val();
+				var levelSelect = $("#puzzle-id");
+				var selectedLevel = levelSelect.val();
+				loadLevel(selectedDifficulty, selectedLevel);
+			}
+
+			function loadLevel(diff, lvl) {
+				sc.load(puzzles[diff][lvl]);
+			}
+			
+			function generatePuzzle() {
+				var puzzle = SCChess.generatePuzzle(parseInt($('#pieces').val()));
+				if (puzzle != "") {
+					//alert (puzzle);
+					showAnalysis(sc);
+					Chess.FEN.load(sc, puzzle);
+					sc.saveState();
+					sc.notifyModelChangeListeners();
+				} else {
+				}
+			}
+			
+			function showAnalysis(bm) {
+				var analysis = SCChess.analyze(bm);
+				var fen = Chess.FEN.get(bm);
+				var analysisDiv = $("#analysis");
+				analysisDiv.html(
+								"<br> Puzzle: " + fen +
+								"<br> Depth: " + analysis.depth + 
+								"<br> Child branch: " + analysis.childBranchCount +
+								"<br> Parent branch: " + analysis.parentBranchCount +
+								"<br> Complexity factor: " + analysis.childBranchCount/analysis.parentBranchCount);
+			}
+			
+			function checkUrl() {
+				var queryStr = getQueryString();
+				if (queryStr.pzl) {
+					sc.load(queryStr.pzl);
+				}
+			}
+			
+			function getQueryString() {
+ 				var result = {}, queryString = location.search.substring(1),
+ 				re = /([^&=]+)=([^&]*)/g, m;
+
+ 				while (m = re.exec(queryString)) {
+ 					result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+				}
+
+				return result;
+			}
+		</script>
+	</head>
+	<body>
+		<div id="board-container">
+			<div id="level-selector">
+				<select id="difficulty" onchange="difficultyChanged()"></select>
+				<select id="puzzle-id" onchange="levelChanged()"></select>
+				<button onclick="sc.back();sc.notifyModelChangeListeners()">&lt;</select>
+				<button onclick="sc.next();">&gt;</select>
+			</div>
+			<div id="container">
+				<span></span>
+			</div>
+			<button onclick="showAnalysis(sc)" value="analyze">analyze</button>
+			<button onclick="generatePuzzle()" value="generate">generate</button>
+			<input id="pieces" value="3" size="1">
+			<div id="analysis">
+			</div>
+		</div>
+	</body>
+</html>
+

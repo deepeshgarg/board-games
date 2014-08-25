@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html ng-app>
+	<head>
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+		<style>
+			.cell-class {
+				height: 35px;
+				width: 35px;
+				padding: 0px;
+				margin: 0px;
+			}
+
+			.cell-class img {
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+
+		<script src="../js/less/1.3.1/less.min.js"></script>
+		<script src="../js/jquery/1.8.2/jquery.min.js"></script>
+		<script src="../js/modernizr.js"></script>
+		<script src="../js/angular/1.1.0/angular.js"></script>
+		<script src="../js/json/json2.js"></script>
+		<script src="../js/ang-common/NGBoardBaseController.js"></script>
+		<script src="js/TicTacToeController.js"></script>
+
+	</head>
+	<body>
+		<div ng-controller="TicTacToeController">
+			<div id="board-ctnr">
+				<div ng-include="'../ang-common-templates/tmpl-board-ctnr.html'" style="display:block; position:relative"></div>
+			</div>
+		</div>
+	</body>
+</html> 

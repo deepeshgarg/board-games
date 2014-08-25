@@ -1,0 +1,56 @@
+		<script id="default-cell-template" type="text/html">
+			<span data-bind="text: $root.b()[r]()[c](), event: $root.eventHandlers"/>
+		</script>
+
+		<script id="all-board-template" type="text/html">
+			<span data-bind="template: {name: 'upBoard'}, visible: orientation() == 'up'"></span>
+			<span data-bind="template: {name: 'downBoard'}, visible: orientation() == 'down'"></span>
+			<span data-bind="template: {name: 'rightBoard'}, visible: orientation() == 'right'"></span>
+			<span data-bind="template: {name: 'leftBoard'}, visible: orientation() == 'left'"></span>
+		</script>
+
+		<script id="image-cell-template" type="text/html">
+			<span data-bind="text: $root.b()[r]()[c](), event: $root.eventHandlers"/>
+			<img data-bind="attr: { src : $root.getCellImage(r, c)}"/>
+		</script>
+	
+		<script id="upBoard" type="text/html">
+			<table data-bind="foreach: $root.rl">
+				<tr data-bind="foreach: $root.cl">
+					<td>
+						<span data-bind="template: {name : $root.cellTemplate, data : {r: $parent, c: $data} }"/>
+					</td>
+				</tr>
+			</table>
+		</script>
+
+		<script id="downBoard" type="text/html">
+			<table data-bind="foreach: $root.rrl">
+				<tr data-bind="foreach: $root.rcl">
+					<td>
+						<span data-bind="template: {name : $root.cellTemplate, data : {r: $parent, c: $data} }"/>
+					</td>
+				</tr>
+			</table>
+		</script>
+
+		<script id="rightBoard" type="text/html">
+			<table data-bind="foreach: $root.cl">
+				<tr data-bind="foreach: $root.rrl">
+					<td>
+						<span data-bind="template: {name : $root.cellTemplate, data : {r: $data, c: $parent} }"/>
+					</td>
+				</tr>
+			</table>
+		</script>
+
+		<script id="leftBoard" type="text/html">
+			<table data-bind="foreach: $root.rcl">
+				<tr data-bind="foreach: $root.rl">
+					<td>
+						<span data-bind="template: {name : $root.cellTemplate, data : {r: $data, c: $parent} }"/>
+					</td>
+				</tr>
+			</table>
+		</script>
+
