@@ -1,4 +1,5 @@
 #container {
+	position:relative;
 	margin-left: auto;
 	margin-right: auto;
         width:315px; 
@@ -25,8 +26,64 @@
 	border-spacing: 0;
 	border: 0px; 
 	display:inline;
+	float:left;
+}
+
+.fom-score-t {
+	border-spacing: 0;
+	border: 0px; 
+	float: right;
+	display:inline;
+}
+
+.fom-score-c {
+	height:35px;
+	width:35px;
+}
+
+.fom-nav-btn-t {
+	border-spacing: 0;
+	border: 0px; 
+	float: right;
+	display:inline;
+	position:relative;
+	z-index:10;
+}
+
+.fom-nav-btn-c {
+	height:35px;
+	width:35px;
 }
 
 .fom-selected {
 	border: 1px solid red;
+}
+
+.board {
+	border-spacing: 0;
+	border: 1px solid black;
+}
+
+.scores {
+	position:absolute;
+	top: 50px;
+	left:60px;
+	margin: auto;
+	z-index: 999;
+	background-color: rgb(255,255,255);
+}
+
+.scores-t {
+	border-spacing: 0;
+	border: 5px solid blue;
+	padding:4px;
+	margin:4px;
+}
+
+.scores-c {
+	border-spacing: 0;
+	border: 1px solid blue;
+	padding:4px;
+	margin:4px;
+
 }

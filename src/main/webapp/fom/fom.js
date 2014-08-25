@@ -181,10 +181,10 @@ FOMModel.prototype.onClickImpl = function (row, col) {
 };
 
 FOMModel.prototype.getNextColors = function () {
-	next = [];
-	len = this.colors.length;
-	for (i = 0; i < 3; i++) {
-		r_idx = Math.floor(Math.random()*len)
+	var next = [];
+	var len = this.colors.length;
+	for (var i = 0; i < 3; i++) {
+		var r_idx = Math.floor(Math.random()*len)
 		dbg (r_idx, {on:false});
 		next.push(this.colors[r_idx]);
 	}

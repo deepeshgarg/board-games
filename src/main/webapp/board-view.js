@@ -7,16 +7,18 @@ BoardView.prototype.createTable = function (boardModel, data) {
 	this.cache = {};
 	this.cache.u = {};
 	this.cache.d = {};
-	tbl = $("<TABLE></TABLE>").addClass("board");
+	var tbl = $("<TABLE></TABLE>").addClass("board");
 	this.cache.u.table = tbl;
 	this.cache.u.grid = new Array(boardModel.rows);
-	for (row = 0; row < boardModel.rows; row++) {
+	for (var row = 0; row < boardModel.rows; row++) {
 		this.cache.u.grid[row] = new Array(boardModel.cols);
-		rw = this.createRow ();
+		var rw = this.createRow ();
 		tbl.append(rw);
-		for (col = 0; col < boardModel.cols; col++) {
+		for (var col = 0; col < boardModel.cols; col++) {
 			cl = this.createColumn(row, col);
 			cl.bind("click", {"bm":boardModel, "bv":this}, this.onClickHandler);
+			cl.bind("mousedown", {"bm":boardModel, "bv":this}, this.onMouseDownHandler);
+			cl.bind("mouseup", {"bm":boardModel, "bv":this}, this.onMouseUpHandler);
 			rw.append(cl);
 			this.cache.u.grid[row][col] = cl;
 		}
@@ -28,12 +30,36 @@ BoardView.prototype.createTable = function (boardModel, data) {
 BoardView.prototype.onClickHandler = function (event) {
 	bm = event.data.bm;
 	bv = event.data.bv;
-	row = $(this).attr('r'); 
-	col = $(this).attr('c'); 
+	row = parseInt($(this).attr('r')); 
+	col = parseInt($(this).attr('c')); 
 	bv.onClick(bm, row, col);
 }
 
+BoardView.prototype.onMouseDownHandler = function (event) {
+	bm = event.data.bm;
+	bv = event.data.bv;
+	row = parseInt($(this).attr('r')); 
+	col = parseInt($(this).attr('c')); 
+	bv.onMouseDown(bm, row, col);
+	return false;
+}
+
+BoardView.prototype.onMouseUpHandler = function (event) {
+	bm = event.data.bm;
+	bv = event.data.bv;
+	row = parseInt($(this).attr('r')); 
+	col = parseInt($(this).attr('c')); 
+	bv.onMouseUp(bm, row, col);
+	return false;
+}
+
 BoardView.prototype.onClick = function (boardModel, row, col) {
+}
+
+BoardView.prototype.onMouseDown = function (boardModel, row, col) {
+}
+
+BoardView.prototype.onMouseUp = function (boardModel, row, col) {
 }
 
 BoardView.prototype.handleModelChange = function (boardModel) {

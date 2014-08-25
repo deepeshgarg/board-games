@@ -6,6 +6,7 @@ function BoardModel(rows, cols) {
 	this.modelChangeListeners = [];
 	this.savedStates = [];
 	this.currentStateIdx = -1;
+	this.listenerUpdateAuto = true;
 	this.board = BoardUtil.createGrid(this.rows, this.cols, "");
 };
 
@@ -15,8 +16,15 @@ BoardModel.prototype.getCell = function(row, col) {
 
 BoardModel.prototype.setCell = function(row, col, data) {
 	this.board[row][col] = data;
-	this.notifyModelChangeListeners();
+	this.modelChanged();
 };
+
+BoardModel.prototype.inBoard = function(r, c) {
+	if (r >= 0 && r < this.rows && c >= 0 && c < this.cols) {
+		return true;
+	}
+	return false;
+}
 
 BoardModel.prototype.saveState = function () {
 	var state = {};
@@ -38,7 +46,7 @@ BoardModel.prototype.back = function () {
 	if (this.currentStateIdx > 0) {
 		this.currentStateIdx--;
 		this.restoreState();
-		this.notifyView (this);
+		this.modelChanged();
 	}
 }
 
@@ -46,7 +54,7 @@ BoardModel.prototype.next = function () {
 	if (this.savedStates.length > this.currentStateIdx + 1 ) {
 		this.currentStateIdx++;
 		this.restoreState();
-		this.notifyView (this);
+		this.modelChanged();
 	}
 }
 
@@ -55,29 +63,15 @@ BoardModel.prototype.restoreState = function () {
 	this.restoreChildState (this.savedStates[this.currentStateIdx]);
 }
 
+BoardModel.prototype.clearSavedStates = function() {
+	this.savedStates = [];
+	this.currentStateIdx = -1;
+}
+
 BoardModel.prototype.saveChildState = function (state) {
 }
 
 BoardModel.prototype.restoreChildState = function (state) {
-}
-
-BoardModel.prototype.onClickHandler = function (event) {
-	bm = event.data;
-	row = $(this).attr('r'); 
-	col = $(this).attr('c'); 
-	bm.onClick(row, col);
-}
-
-BoardModel.prototype.onClick = function (row, col) {
-	dbg ('clicked ' + this.name + ' at row ' + row + ' col ' + col, {on:false});
-	this.onClickImpl(row, col);
-	this.notifyView(this);
-}
-
-BoardModel.prototype.notifyView = function (model) {
-	for (i = 0; i < this.viewHandlers.length; i++) {
-		this.viewHandlers[i].updateView(model);
-	}
 }
 
 BoardModel.prototype.registerViewHandler = function (viewHandler) {
@@ -88,18 +82,15 @@ BoardModel.prototype.registerModelChangeListener = function (modelChangeListener
 	this.modelChangeListeners.push(modelChangeListener);	
 }
 
+BoardModel.prototype.modelChanged = function () {
+	if (this.listenerUpdateAuto) {
+		this.notifyModelChangeListeners();
+	}
+}
+
 BoardModel.prototype.notifyModelChangeListeners = function () {
 	for (i = 0; i < this.modelChangeListeners.length; i++) {
 		this.modelChangeListeners[i].handleModelChange(this);
 	}
-}
-
-function Cell(row, col) {
-	this.r = row;
-	this.c = col;
-};
-
-Cell.prototype.toString = function () {
-	return '[' + this.r + ',' + this.c + ']';
 }
 
