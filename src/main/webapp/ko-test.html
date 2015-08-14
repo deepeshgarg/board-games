@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<script src="jquery-1.7.2.min.js"></script>
+		<script src="knockout-2.1.0.js"></script>
+		<script src="ko-board-model.js"></script>
+		<script src="ko-common.js"></script>
+
+		<script>
+			var $jq = jQuery.noConflict();	
+			var bm ;
+			function loadModel() {
+				bm = new BoardModel(3,6);
+			}
+
+			function applyBinding() {
+				console.log ('in applyBinding');
+				ko.applyBindings(bm);
+			}
+
+			function loadTemplates() {
+				ensureTemplates([
+				'templates/common/all-board',
+				'templates/common/up-board',
+				'templates/common/right-board',
+				'templates/common/down-board',
+				'templates/common/left-board',
+				'templates/common/cell-text',
+				'templates/common/cell-img',
+				'templates/common/board',
+				'templates/common/row',
+				], bm);
+			}
+
+			$jq(document).ready([loadModel, loadTemplates]);
+		</script>
+	</head>
+	<body>
+		<div id="container">
+			<select data-bind="value: orientation">
+				<option value="up">Up</option>
+				<option value="down">Down</option>
+				<option value="right">Right</option>
+				<option value="left">Left</option>
+				<option value="board">Board</option>
+			</select>
+			<div data-bind="template: 'all-board'"></div>
+		</div>
+	</body>
+</html>

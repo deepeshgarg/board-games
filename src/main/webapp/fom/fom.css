@@ -75,14 +75,14 @@
 
 .scores-t {
 	border-spacing: 0;
-	border: 5px solid blue;
+	border: 5px solid brown;
 	padding:4px;
 	margin:4px;
 }
 
 .scores-c {
 	border-spacing: 0;
-	border: 1px solid blue;
+	border: 1px solid red;
 	padding:4px;
 	margin:4px;
 

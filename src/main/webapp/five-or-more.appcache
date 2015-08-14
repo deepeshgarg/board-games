@@ -1,20 +1,26 @@
 CACHE MANIFEST
-# ref 1.5
+# ref legacy 1.1
 five-or-more.html
-jquery-1.6.4.min.js
-board.css
-board-model.js
-board-view.js
-debug.js
-fom/blank.gif
-fom/b.gif
-fom/c.gif
-fom/g.gif
-fom/o.gif
-fom/p.gif
-fom/r.gif
-fom/y.gif
-fom/astar.js
-fom/fom.js
 fom/fom.css
+js/less/1.3.1/less.min.js
+js/jquery/1.8.2/jquery.min.js
+js/angular/1.1.0/angular.min.js
+js/json/json2.js
+js/ang-common/NGBoardBaseController.js
+js/modernizr.js
+board-common.js
+fom/js/fom-service.js
+fom/js/FOMController.js
+ang-common-templates/tmpl-board-ctnr.html
+ang-common-templates/tmpl-up-board.html
+ang-common-templates/tmpl-cell-img.html
+fom/images/b.gif
+fom/images/c.gif
+fom/images/g.gif
+fom/images/o.gif
+fom/images/p.gif
+fom/images/r.gif
+fom/images/y.gif
 images/blank.gif
+fom/astar.js
+fom/fom.css

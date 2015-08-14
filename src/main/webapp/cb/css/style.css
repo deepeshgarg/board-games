@@ -1,0 +1,75 @@
+#log {
+	position : absolute;
+	bottom : 0px;
+	display: none;
+}
+
+body {
+	background: green;
+}
+
+#container {
+	border:0px solid black;
+	width: 240px;
+	margin: auto;
+}
+
+#inner-container {
+	border:0px solid black;
+	display: table;
+	margin: 0 auto;
+}
+
+.li {
+	color : brown;
+	font-size : 12em;
+}
+
+.ib {
+	display : inline-block;
+}
+
+.num {
+	height : 30px;
+	width : 30px;
+	font-size : 25px;
+	background: #663300;
+	color: yellow;
+	text-align: center;
+}
+
+.guess {
+	border : 0px solid black;
+}
+
+.call {
+	background: brown;
+	border : 0px solid black;
+	height : 30px;
+	font-size : 25px;
+	color: orange;
+}
+
+.num_in {
+	width: 150px;
+	height: 30px;
+	font-size: 25px;
+}  
+
+.button {
+	height: 25px;
+	border: 2px solid yellow;
+	color: yellow;
+	background: brown;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin-top: 3px;
+	font-family: "arial";
+	font-size: 20px;
+	border-radius : 5px;
+}
+
+#win {
+	font-size: 30px;
+	color: yellow;
+}

@@ -13,19 +13,24 @@ function FOMController($scope, $log) {
 	fomService.initialize();
 	$scope.nextColors = fomService.nextColors;
 
-    	$scope.boardTemplate = "../ang-common-templates/tmpl-up-board.html";
-	$scope.cellTemplate = "../ang-common-templates/tmpl-cell-img.html";
+	var pathPrefix = "";
+	if (legacySupport == true) {
+		pathPrefix = "fom/";
+	}
+
+    	$scope.boardTemplate = pathPrefix + "../ang-common-templates/tmpl-up-board.html";
+	$scope.cellTemplate = pathPrefix + "../ang-common-templates/tmpl-cell-img.html";
 	$scope.score = 0;
 
 	$scope.imgMap = {};
-	$scope.imgMap['e'] = "../images/blank.gif";
-	$scope.imgMap['b'] = "images/b.gif";
-	$scope.imgMap['c'] = "images/c.gif";
-	$scope.imgMap['g'] = "images/g.gif";
-	$scope.imgMap['o'] = "images/o.gif";
-	$scope.imgMap['p'] = "images/p.gif";
-	$scope.imgMap['r'] = "images/r.gif";
-	$scope.imgMap['y'] = "images/y.gif";
+	$scope.imgMap['e'] = pathPrefix + "../images/blank.gif";
+	$scope.imgMap['b'] = pathPrefix + "images/b.gif";
+	$scope.imgMap['c'] = pathPrefix + "images/c.gif";
+	$scope.imgMap['g'] = pathPrefix + "images/g.gif";
+	$scope.imgMap['o'] = pathPrefix + "images/o.gif";
+	$scope.imgMap['p'] = pathPrefix + "images/p.gif";
+	$scope.imgMap['r'] = pathPrefix + "images/r.gif";
+	$scope.imgMap['y'] = pathPrefix + "images/y.gif";
 
 	$scope.showScores = false;
 

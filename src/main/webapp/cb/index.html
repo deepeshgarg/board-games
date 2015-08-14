@@ -1,0 +1,61 @@
+<html ng-app="cbMod">
+
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="../js/angular/1.1.0/angular.min.js"></script>
+		<script src="js/ctrlr.js"></script>
+		<script src="js/myAngUtil.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
+	<body ng-controller="GameController" >
+		<!-- {{n}} -->
+		<div id="container">
+			<div id="inner-container">
+				<div class="button ib" ng-click="newGame()">New</div>
+				<div style="height: 8px"></div>
+				<input class="num_in" ng-model="g"></input>
+				<!--
+				<span ng-repeat="gv in ga">
+					<input ng-model="gv.v" ng-change="change($index)" focus-on="fa[$index].v" size="2" maxlength="2"></input>
+				</span>
+				-->
+				<div class="button ib" ng-click="try()">Go</div>
+		
+				<div ng-repeat="gc in gca">
+					<div class="ib guess">
+						<div class="ib num" ng-repeat="gn in gc.guess">{{gn}}</div>
+					</div>
+					<div class="ib call">
+						<div class="ib">{{gc.call.c}}C {{gc.call.b}}B</div>
+					</div>
+				</div>
+				<div id="win" ng-show="win()">Yay! You win.</div>
+			</div>
+		</div>
+		<!--
+		<div>
+			<div class="ib guess">
+				<div class="ib num">2</div>
+				<div class="ib num">7</div>
+				<div class="ib num">8</div>
+				<div class="ib num">1</div>
+			</div>
+			<div class="ib call">
+				<div class="ib">1C 2B</div>
+			</div>
+		</div>
+		<div>
+			<div class="ib guess">
+				<div class="ib num">3</div>
+				<div class="ib num">5</div>
+				<div class="ib num">9</div>
+				<div class="ib num">0</div>
+			</div>
+			<div class="ib call">
+				<div class="ib">0C 0B</div>
+			</div>
+		</div>
+		-->
+		<div id="log">{{log}}</div>
+	</body>
+</html>

@@ -1,0 +1,100 @@
+<html>
+	<head>
+		<style>
+			#container {
+				position: relative;
+				width: 315;
+			}
+
+			.b-table { 
+				border: 1px solid black;
+				margin: 0px;
+				padding: 0px;
+				border-collapse : collapse;
+			}
+
+			.b-table tbody {
+				margin: 0px;
+				padding: 0px;
+			}
+
+			.b-table tbody tr {
+				margin: 0px;
+				padding: 0px;
+			}
+
+			.b-cell {
+				height: 35px;
+				width: 35px;
+				margin: 0px;
+				padding: 0px;
+				border: 1px solid red;
+			}
+
+			div.board-container {
+				margin-top: 30px;
+			}
+				
+
+			div.nextcolors {
+				position: absolute;
+				left: 1px;
+				
+			}
+
+			div.score {
+				position: absolute;
+				right: 1px;
+			}	
+
+			img.nextcolor {
+				height: 30px;
+				width: 30px;
+			}
+
+		</style>
+
+		<script src="jquery-1.7.2.min.js"></script>
+		<script src="knockout-2.1.0.js"></script>
+		<script src="ko-board-model.js"></script>
+		<script src="ko-common.js"></script>
+		<script src="ko-five-or-more.js"></script>
+		<script src="fom/astar.js"></script>
+
+		<script>
+			var $jq = jQuery.noConflict();	
+			var bm ;
+			function loadModel() {
+				bm = new KOFiveOrMoreModel(3,3);
+			}
+
+			function applyBinding() {
+				console.log ('in applyBinding');
+				ko.applyBindings(bm);
+			}
+
+			function loadTemplates() {
+				ensureTemplates([
+				'templates/common/up-board',
+				'templates/common/cell-img',
+				], bm);
+			}
+
+			$jq(document).ready([loadModel, loadTemplates]);
+		</script>
+	</head>
+	<body>
+		<div id="container">
+			<div style="display:inline-block">
+				<div class="nextcolors" data-bind="foreach: nextColors">
+					<img class="nextcolor" data-bind="attr: {src: $root.imageMap[$data]}">
+				</div>
+				<div class="score">Score: <span data-bind="text: score"></span></div>
+			</div>
+			<div class="board-container">
+				<div data-bind="template: 'up-board'"></div>
+			</div>
+		</div>
+	</body>
+</html>
+

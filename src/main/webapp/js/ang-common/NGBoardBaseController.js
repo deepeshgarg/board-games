@@ -17,6 +17,13 @@ function NGBoardBaseController(r, c, $scope, $log) {
     $scope.cl = range(0, $scope.bm[0].length - 1);
     $scope.rcl = range($scope.bm[0].length - 1, 0);
 
+    $scope.onMouseUp = function($event, row, col) {
+    };
+
+    $scope.onMouseDown = function($event, row, col) {
+        $log.log('click ' + row + ' ' + col);
+    };
+
     $scope.onClick = function($event, row, col) {
         $log.log('click ' + row + ' ' + col);
     };

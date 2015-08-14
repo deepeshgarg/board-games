@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<style>
+			.b-table { 
+				border: 1px solid black;
+			}
+
+			.b-cell {
+				height: 100px;
+				width: 100px;
+				border: 1px solid red;
+			}
+
+		</style>
+
+		<script src="jquery-1.7.2.min.js"></script>
+		<script src="knockout-2.1.0.js"></script>
+		<script src="ko-board-model.js"></script>
+		<script src="ko-common.js"></script>
+		<script src="ko-tic-tac-toe.js"></script>
+
+		<script>
+			var $jq = jQuery.noConflict();	
+			var bm ;
+			function loadModel() {
+				bm = new KOTicTacToeModel(3,3);
+			}
+
+			function applyBinding() {
+				console.log ('in applyBinding');
+				ko.applyBindings(bm);
+			}
+
+			function loadTemplates() {
+				ensureTemplates([
+				'templates/common/up-board',
+				'templates/common/cell-img',
+				], bm);
+			}
+
+			$jq(document).ready([loadModel, loadTemplates]);
+		</script>
+	</head>
+	<body>
+		<div id="container">
+			<div data-bind="foreach: nextcolors"><span><img data-bind="attr: {src : $root.imageMap[$data]}"</span></div>
+			<div data-bind="template: 'up-board'"></div>
+		</div>
+	</body>
+</html>
+

@@ -1,1 +1,1 @@
-<div ng-click="onClick($event, row, col)">{{bm[row][col]}}</div>
+<div  ng-class="cellClass(row, col)" class="cell-class" ng-mousedown="onMouseDown($event, row, col)" ng-mouseup="onMouseUp($event, row, col)" ng-click="onClick($event, row, col)">{{bm[row][col]}}</div>

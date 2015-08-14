@@ -1,0 +1,36 @@
+
+
+#board-container {
+	margin-left: auto;
+	margin-right: auto;
+    width:315px; 
+}
+
+.cell {
+	height:50px;
+	width:50px;
+	border: 2px solid black;
+}
+
+.light {
+	background-color: #bbbbee;
+}
+
+.dark {
+	background-color: #666699;
+}
+
+.selected {
+	border: 1px solid yellow;
+}
+
+.validmove {
+	border: 1px solid #66ff66;
+}
+
+.board {
+	background-color: #9999ff;
+	border: 2px solid brown;
+}
+
+
