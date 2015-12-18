@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+	<head>
+	  <base href="/cc/">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+
+		<script src="../js/json/json2.js"></script>
+		<script src="../js/angular/1.3.0/angular.js"></script>
+		<script src="../js/ang-common/NGBoardBaseController.js"></script>
+		<script src="../js/ang-common/NGOnlineGameController.js"></script>
+		<script src="../js/ang-common/OnlineGameDataService.js"></script>
+		<script src="js/CC_Controller.js"></script>
+
+	</head>
+	<body>
+		<div id="container" ng-controller="CCController">
+			<div id="board-ctnr">
+				<div ng-include="'../ang-common-templates/tmpl-board-ctnr.html'" style="display:block; position:relative">
+				</div>
+				<div ng-show="selectingPlayers && !flipBoard">
+					<div class="p1-select"><select ng-model="players.p1" ng-options="po.color as po.label for po in playerOptions"></select></div>
+					<div class="p2-select"><select ng-model="players.p2" ng-options="po.color as po.label for po in playerOptions"></select></div>
+					<div class="p3-select"><select ng-model="players.p3" ng-options="po.color as po.label for po in playerOptions"></select></div>
+					<div class="p4-select"><select ng-model="players.p4" ng-options="po.color as po.label for po in playerOptions"></select></div>
+					<div class="p5-select"><select ng-model="players.p5" ng-options="po.color as po.label for po in playerOptions"></select></div>
+					<div class="p6-select"><select ng-model="players.p6" ng-options="po.color as po.label for po in playerOptions"></select></div>
+				</div>
+				<div ng-show="selectingPlayers && flipBoard">
+					<div class="p1-select"><select ng-model="players.p6" ng-options="po.color as po.label for po in playerOptions"></select></div>
+					<div class="p2-select"><select ng-model="players.p5" ng-options="po.color as po.label for po in playerOptions"></select></div>
+					<div class="p3-select"><select ng-model="players.p4" ng-options="po.color as po.label for po in playerOptions"></select></div>
+					<div class="p4-select"><select ng-model="players.p3" ng-options="po.color as po.label for po in playerOptions"></select></div>
+					<div class="p5-select"><select ng-model="players.p2" ng-options="po.color as po.label for po in playerOptions"></select></div>
+					<div class="p6-select"><select ng-model="players.p1" ng-options="po.color as po.label for po in playerOptions"></select></div>
+				</div>
+
+			</div>
+			<br>
+			<div>
+				<button ng-click="newOnlineGame()">New Online Game</button>
+				<button ng-click="selectPlayersMode()" ng-show="!selectingPlayers">Select Players</button>
+				<button ng-click="completeSelection()" ng-show="selectingPlayers">Start Game</button>
+				<button ng-click="cancelSelection()" ng-show="selectingPlayers">Cancel</button>
+				Flip Board <input type="checkbox" ng-model="flipBoard" ng-change="flipChanged()">
+			</div>
+		</div>
+	</body>
+</html> 

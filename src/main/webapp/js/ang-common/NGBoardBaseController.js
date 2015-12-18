@@ -21,12 +21,24 @@ function NGBoardBaseController(r, c, $scope, $log) {
     };
 
     $scope.onMouseDown = function($event, row, col) {
-        $log.log('click ' + row + ' ' + col);
     };
 
     $scope.onClick = function($event, row, col) {
-        $log.log('click ' + row + ' ' + col);
     };
+
+    $scope.resizeBoard = function(r, c) {
+	    $scope.bm = new Array(r);
+	    for (var row = 0; row < r; row++) {
+		    $scope.bm[row] = new Array(c);
+		    for (var col = 0; col < c; col++) {
+			    $scope.bm[row][col] = "";
+		    }
+	    }
+	    $scope.rl = range(0, $scope.bm.length - 1);
+	    $scope.rrl = range($scope.bm.length - 1, 0);
+	    $scope.cl = range(0, $scope.bm[0].length - 1);
+	    $scope.rcl = range($scope.bm[0].length - 1, 0);
+    }
 
     function range (from, to) {
         var incr = from < to? 1 : -1;

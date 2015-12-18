@@ -18,6 +18,12 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>3.0.6.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>board-games</finalName>
@@ -39,7 +45,7 @@
 					<scanIntervalSeconds>10</scanIntervalSeconds>
 					<stopPort>9966</stopPort>
 					<stopKey>foo</stopKey>
-					<contextPath>/board-games</contextPath>					       
+					<contextPath>/</contextPath>					       
 					<connectors>
 						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
 							<port>8080</port>							     

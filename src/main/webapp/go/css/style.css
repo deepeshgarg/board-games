@@ -1,0 +1,106 @@
+#container {
+	border:0px solid black;
+	width: 360px;
+	margin: auto;
+}
+
+.board {
+	width: 360px;
+	height: 360px;
+	border: 1px solid #cccc33;
+	border-radius: 3px;
+	/*background: #794d47; */
+	background: #8f4b14; 
+	
+}
+
+.board-cell {
+	border: 0px ;
+	position:relative;
+}
+
+.cell-class {
+	display: table-cell;
+	position:absolute;
+	top:0px;
+	left:0px;
+	bottom:0px;
+	right:0px;
+	vertical-align: middle;
+	text-align: center;
+	border: 0px solid black;
+	background: #ffff99;
+	border-radius: 0px;
+}
+
+.cell-class img {
+	width: 100%;
+	height: 100%;
+}
+
+.empty {
+	border: 0px ;
+	background: white;
+}
+
+.button {
+	height: 25px;
+	border: 2px solid black;
+	color: yellow;
+	background: #485BB1;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin-top: 3px;
+	font-family: "arial";
+	font-size: 20px;
+	border-radius : 5px;
+}
+
+.c_tl {
+	background: url('../images/c-tl.png');
+	background-size: contain;
+}
+
+.c_tr {
+	background: url('../images/c-tr.png');
+	background-size: contain;
+}
+
+.c_bl {
+	background: url('../images/c-bl.png');
+	background-size: contain;
+}
+
+.c_br {
+	background: url('../images/c-br.png');
+	background-size: contain;
+}
+
+.e_t {
+	background: url('../images/e-t.png');
+	background-size: contain;
+}
+
+.e_b {
+	background: url('../images/e-b.png');
+	background-size: contain;
+}
+
+.e_l {
+	background: url('../images/e-l.png');
+	background-size: contain;
+}
+
+.e_r {
+	background: url('../images/e-r.png');
+	background-size: contain;
+}
+
+.m_m {
+	background: url('../images/m-m.png');
+	background-size: contain;
+}
+
+.ib {
+	display : inline-block;
+}

@@ -14,6 +14,7 @@ function FOMController($scope, $log) {
 	$scope.nextColors = fomService.nextColors;
 
 	var pathPrefix = "";
+	var maxHighScoreCount = 10;
 	if (legacySupport == true) {
 		pathPrefix = "fom/";
 	}
@@ -41,16 +42,16 @@ function FOMController($scope, $log) {
 	$scope.onClick = function($event, row, col) {
 		fomService.onClickImpl(row, col);	
 		if (fomService.getEmptyCellList().length == 0) {
-			$scope.showScores = true;
 			var hs = loadHighScore();
 			var name = "";
 			var score = fomService.score;
-			if (hs.length == 0 || (hs.length > 0 && hs[hs.length - 1].score < fomService.score)) {
+			if ((hs.length < maxHighScoreCount || (hs.length > 0 && hs[hs.length - 1].score < fomService.score)) && $scope.showScores == false) {
 				if (hs.length > 0) { name = hs[0].name }
 				name = window.prompt("Enter name", name);
 				$scope.saveHighScore(name, score);
 				$scope.highScores = loadHighScore();
 			}
+			$scope.showScores = true;
 		}
 		$scope.nextColors = fomService.nextColors;
 		$scope.score = fomService.score;
@@ -64,19 +65,22 @@ function FOMController($scope, $log) {
 				hs.push(highScore); 
 			} else {
 				var i = 0;
-				for (i = 0; i < hs.length && i < 10; i++) {
+				for (i = 0; i < hs.length && i < maxHighScoreCount; i++) {
 					if (hs[i].score < score) {
 						hs.splice(i, 0, highScore);
 						break;
 					}
 				}
-				if (i == hs.length && i < 10) {
+				if (i == hs.length && i < maxHighScoreCount) {
 					hs.push (highScore);
 				}
 			}
+			if (hs.length > maxHighScoreCount) {
+				hs.splice(maxHighScoreCount, hs.length - maxHighScoreCount);
+			}
 			var highScores = JSON.stringify(hs);
 			var ls = window.localStorage;
-			ls.setItem("highScores", highScores);
+			ls.setItem("fom.highScores", highScores);
 		}
 	}
 
@@ -84,7 +88,7 @@ function FOMController($scope, $log) {
 		var hs = [];
 		if (Modernizr.localstorage) {
 			var ls = window.localStorage;
-			var highScores = ls.getItem("highScores");
+			var highScores = ls.getItem("fom.highScores");
 			if (highScores != null) {
 				hs = JSON.parse(highScores);
 			} 
