@@ -1,5 +1,5 @@
 function TicTacToeController($scope, $log) {
-	NGBoardBaseController(15, 15, $scope, $log);
+	NGBoardBaseController(3, 3, $scope, $log);
 	for (var row = 0; row < $scope.bm.length; row++) {
 		for (var col = 0; col < $scope.bm[row].length; col++) {
 			$scope.bm[row][col] = " ";

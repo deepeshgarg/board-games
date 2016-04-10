@@ -44,7 +44,7 @@ OnlineGameDataService.prototype.onHashSuccess = function success(response) {
 OnlineGameDataService.prototype.onDataSuccess = function success(response) {
 	var gameId = response.config.url.match(/\/gamedata\/(.*)/)[1];
 	console.log("Data Success URL " + response.config.url + " data:" + response.data + " gameid:" + gameId);
-	this.gameIdsToWatch[gameId].callBack(response.data);
+	this.gameIdsToWatch[gameId].callBack(gameId, response.data);
 	this.gameIdsToWatch[gameId].hash = this.gameIdsToWatch[gameId].tempHash;
 	this.gameIdsToWatch[gameId].noUpdateCount = 0;
 }

@@ -11,7 +11,7 @@ function NGOnlineGameController($scope, $log, ods, $location) {
 		}
 		$scope.gameid = qs['gameid'];
 		if (typeof($scope.gameid) != 'undefined') {
-			ods.watch($scope.gameid, $scope.watchCallBack);
+			ods.watch($scope.gameid, $scope.onlineGameWatchCallBack);
 		}
 		$log.log($scope.gameid);
 	});
@@ -23,11 +23,15 @@ function NGOnlineGameController($scope, $log, ods, $location) {
 		return false;
 	}
 
-	$scope.watchCallBack = function(gamedata) {
+	$scope.onlineGameWatchCallBack = function(gameid, gamedata) {
 	}
 
 	$scope.setNewOnlineGameUrl = function() {
 		$location.search('gameid', ods.guid());
+	}
+	
+	$scope.setOfflineGameUrl = function() {
+		$location.search('gameid', null);
 	}
 }
 

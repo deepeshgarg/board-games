@@ -10,7 +10,7 @@ myApp.factory ('onlineGameDataService', ['$interval', '$http', function($interva
 
 myApp.controller('CCController', ['onlineGameDataService', '$scope', '$log', '$location', function(ods, $scope, $log, $location) {
 
-	fctns = {} ;
+	var fctns = {} ;
 	fctns.empty = " ";
 	fctns.initPosition = null;
 
@@ -184,7 +184,7 @@ myApp.controller('CCController', ['onlineGameDataService', '$scope', '$log', '$l
 		return cls;
 	}
 
-	$scope.watchCallBack = function(gamedata) {
+	$scope.onlineGameWatchCallBack = function(gameid, gamedata) {
 		$log.log("watch CallBack " + JSON.stringify(gamedata));
 		var initPosition = fctns.getInitPosition(gamedata.players);
 		for (var i = 0; i < gamedata.moves.length; i++) {
