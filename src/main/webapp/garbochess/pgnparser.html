@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<LINK REL=StyleSheet HREF="" TYPE="text/css">
+		<script src="js/board/board-common.js"></script>
+		<script src="js/board/board.js"></script>
+		<script src="js/board/tree.js"></script>
+		<script src="js/libgarbochess.js"></script>
+		<script src="js/board/Engine.js"></script>
+		<script src="js/board/GarboChessEngine.js"></script>
+		<script src="js/board/chess.js"></script>
+		<script>
+			/*
+			var pgnmvre = /[BNRQK]?[a-h]?[1-8]?[a-h][1-8][=]?[bnrq]?/g ;
+			var sqre = /[a-h][1-8]/g ;
+			var rankre = /[a-h]/ ;
+			var filere = /[1-8]/ ;
+			var piecere = /[NBRQK]/ ;
+			var prmtre = /=[nbrqkNBRQK]/ ;
+			*/
+
+			function parsePGN() {
+				var pgnElm = document.getElementById('pgn');
+				var outElm = document.getElementById('out');
+				moveArray = Chess.PGN.parse(pgnElm.value);
+				var outVal = "len : " + moveArray.length;
+				for (var i = 0; i < moveArray.length; i++) {
+					var m = moveArray[i];
+					outVal += "\n" + i + " : " + m.str + " from:" + m.from + " to:" + m.to + " piece:" + m.piece + " promotion:" + m.promotion + " kill:" + m.kill + " castle:" + m.castle ;
+				}
+				outElm.value = outVal;
+			}
+
+			function parsePGN1() {
+				var moveArray = [];
+				var pgnElm = document.getElementById('pgn');
+				var outElm = document.getElementById('out');
+				var m = pgnElm.value.match(pgnmvre);
+				var outVal = "len : " + m.length;
+				for (var i = 0; i < m.length; i++) {
+					var p = parsePGNMove(m[i]); 
+					moveArray.push(p);
+					outVal += "\n" + i + " : " + m[i] + " " + p;
+				}
+
+				outElm.value = outVal;
+				return moveArray;
+			}
+
+			function parseFEN() {
+				var fenElm = document.getElementById('pgn');
+				var outElm = document.getElementById('out');
+				var canonicalFen = Chess.FEN.canonical(fenElm.value);
+				var outVal = canonicalFen;
+				outElm.value = outVal;
+			}
+			/*
+			function parsePGNMove(move) {
+				var mstr = move;
+				var from = "";
+				var to = "";
+				var piece = "";
+				var promotion = "";
+				var m = move.match(sqre) ;
+				if (m.length == 1) {
+					to = m[0];
+					move = move.replace(to, "");
+					m = move.match(rankre);
+					if (m != null) {
+						from = m[0];
+					} else {
+						m = move.match(filere);	
+						if (m != null) {
+							from = m[0];
+						}
+					}
+				} else if (m.length == 2) {
+					from = m[0];
+					to = m[1];
+					move = move.replace(from, "");
+					move = move.replace(to, "");
+				}
+				var p = move.match (piecere);
+				if (p != null && p.length == 1) {
+					piece = p[0];
+				}
+				p = move.match (prmtre);
+				if (p != null && p.length == 1) {
+					promotion = p[0].substr(1,1);
+				}
+
+				return {"from" : from, "to" : to, "piece" : piece, "promotion" : promotion, "str" : mstr};
+			}
+			*/
+		</script>
+	</head>
+	<body>
+		<textarea id="pgn" rows="10" cols="50">g8=q Na2c3 Rae2 R2c5 O-O O-O-O cxb6</textarea>
+		<textarea id="out" rows="10" cols="70"></textarea>
+		<button onClick="parsePGN()">Parse Pgn</button>
+		<button onClick="parseFEN()">Canonical Fen</button>
+	</body>
+</html> 

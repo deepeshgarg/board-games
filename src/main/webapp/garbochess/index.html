@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html ng-app="chessApp">
+	<head>
+	  <base href="/garbochess/">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet/less" type="text/css" href="css/style.less">
+		<script src="js/less-1.3.1.min.js"></script>
+		<style>
+		</style>
+
+		<script src="../js/jquery/1.8.2/jquery.min.js"></script>
+		<script src="../js/modernizr.js"></script>
+		<script src="../js/angular/1.3.0/angular.js"></script>
+		<script src="../js/json/json2.js"></script>
+		<script src="js/board/tree.js"></script>        
+		<script src="js/board/board-common.js"></script>        
+		<script src="js/board/board.js"></script>        
+		<script src="js/board/chess.js"></script>        
+		<script src="js/libgarbochess.js"></script>        
+		<script src="js/board/Engine.js"></script>        
+		<script src="js/board/GarboChessEngine.js"></script>
+		<script src="js/board/NGBoardBaseController.js"></script>
+		<script src="../js/ang-common/NGOnlineGameController.js"></script>
+		<script src="../js/ang-common/OnlineGameDataService.js"></script>
+		<script src="js/board/NGBoardController.js"></script>
+		
+
+		<script id="tmpl-board-ctnr" type="text/ng-template">
+			<table border="1" ng-include="boardTemplate" class="board">                
+			</table>
+		</script>
+		<script id="tmpl-up-board" type="text/ng-template">
+			<tr ng-repeat="row in rl" class="board-row">
+				<td class="board-cell" ng-repeat="col in cl"><span ng-include="cellTemplate"></span></td>
+			</tr>
+		</script>
+		<script id="tmpl-down-board" type="text/ng-template">
+			<tr ng-repeat="row in rrl">
+				<td class="board-cell" ng-repeat="col in rcl"><span ng-include="cellTemplate"></span></td>
+			</tr>
+		</script>
+		<script id="tmpl-left-board" type="text/ng-template">
+			<tr ng-repeat="col in rcl">
+				<td ng-repeat="row in rl"><span ng-include="cellTemplate"></span></td>
+			</tr>
+		</script>
+		<script id="tmpl-right-board" type="text/ng-template">
+			<tr ng-repeat="col in cl">
+				<td ng-repeat="row in rrl"><span ng-include="cellTemplate"></span></td>
+			</tr>
+		</script>
+		<script id="tmpl-cell" type="text/ng-template">
+			<div ng-click="onClick($event, row, col)">{{bm[row][col]}}</div>
+		</script>
+		<script id="tmpl-cell-img" type="text/ng-template">
+			<div ng-class="cellClass(row, col)" class="cell-class" ng-mousedown="onMouseDown($event, row, col)" ng-mouseup="onMouseUp($event, row, col)"><img ng-src="{{cellimg(row, col)}}" draggable="false"></img></div>
+		</script>
+	</head>
+	<body>
+		<div ng-controller="chessController">
+
+			<div id="board-ctnr">
+				<select ng-model="whitePlayer" ng-options="k for k in players"
+					ng-change="onPlayerChange('w')"></select>
+				<select ng-model="wpStrength" ng-options="s for s in strengths"
+					ng-change="onStrengthChange('w')"></select>
+				<select ng-model="blackPlayer" ng-options="k for k in players"
+					ng-change="onPlayerChange('b')"></select>
+				<select ng-model="bpStrength" ng-options="s for s in strengths"
+					ng-change="onStrengthChange('b')"></select>
+				<input type="checkbox" ng-model="flipBoard" ng-change="flipChanged()">
+				<span class="ib menu" ng-click="toggleSettingsPanel()"></span>
+				<div ng-include="'tmpl-board-ctnr'" style="display:block; position:relative"></div>
+				<div class="hint">{{getCurrentDD().hint}}</div>
+				<!-- <div>{{fen}}</div> -->
+			</div>
+
+			<div id="movelist-ctnr" ng-hide="editMode">
+				<div ng-repeat="dd in displayDataArray" ng-class="getMoveRowClass($index)">
+					<div class="ib" ng-click="moveClick($index)" style="width:66px;">
+						<div class="ib move-text">{{dd.moveDisplayText}}</div>
+						<div class="ib analysis-outer">
+							<div ng-style="{'width': getScoreCellWidth(dd.score)}" 
+								class="analysis-inner"></div>
+							<div class="analysis-midline"></div>
+						</div>
+					</div>
+					<div class="ib arrow" ng-class="vrtnsClass(dd.variations.length)" 
+						ng-click="toggleVariations($event, dd.variations.length)">
+					</div>
+					<div class="variations">
+						<div class="variation" ng-repeat="vrtn in dd.variations"
+							ng-click="variationClick($event, $parent.$index, vrtn)">
+							{{vrtn.text}}
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="edit-ctnr" ng-show="editMode">
+				<table border="1" class="board">
+					<tr class="board-row">
+						<td class="board-cell edit-cell-class" ng-click="selectEditPiece('k')"><img src="img/king-b.png"></td>
+						<td class="board-cell edit-cell-class" ng-click="selectEditPiece('q')"><img src="img/queen-b.png"></td> 
+						<td class="board-cell edit-cell-class" ng-click="selectEditPiece('r')"><img src="img/rook-b.png"></td>
+						<td class="board-cell edit-cell-class" ng-click="selectEditPiece('b')"><img src="img/bishop-b.png"></td>
+						<td class="board-cell edit-cell-class" ng-click="selectEditPiece('n')"><img src="img/knight-b.png"></td>
+						<td class="board-cell edit-cell-class" ng-click="selectEditPiece('p')"><img src="img/pawn-b.png"></td>
+						<td class="board-cell edit-cell-class" ng-click="selectEditPiece(' ')"><img src="img/blank.png"></td>
+					</tr>
+					<tr>
+						<td class="board-cell edit-cell-class" ng-click="selectEditPiece('K')"><img src="img/king-w.png"></td>
+						<td class="board-cell edit-cell-class" ng-click="selectEditPiece('Q')"><img src="img/queen-w.png"></td> 
+						<td class="board-cell edit-cell-class" ng-click="selectEditPiece('R')"><img src="img/rook-w.png"></td>
+						<td class="board-cell edit-cell-class" ng-click="selectEditPiece('B')"><img src="img/bishop-w.png"></td>
+						<td class="board-cell edit-cell-class" ng-click="selectEditPiece('N')"><img src="img/knight-w.png"></td>
+						<td class="board-cell edit-cell-class" ng-click="selectEditPiece('P')"><img src="img/pawn-w.png"></td>
+						<td class="board-cell edit-cell-class" ng-click="selectEditPiece(' ')"><img src="img/blank.png"></td>
+					</tr>
+					<tr>
+						<td class="board-cell edit-cell-class">k<input type="checkbox" ng-model="edit.castle[0]"></td>
+						<td class="board-cell edit-cell-class">q<input type="checkbox" ng-model="edit.castle[1]"></td> 
+						<td class="board-cell edit-cell-class">K<input type="checkbox" ng-model="edit.castle[2]"></td>
+						<td class="board-cell edit-cell-class">Q<input type="checkbox" ng-model="edit.castle[3]"></td>
+						<td class="board-cell edit-cell-class" ng-click="toggleEditToMove()">{{edit.toMove}}</td>
+						<td class="board-cell edit-cell-class" colspan="2"></td>
+					</tr>
+					<tr>
+						<td class="board-cell edit-cell-class" colspan="7">
+							<button ng-click="loadEdit()">Load</button>
+							<button ng-click="cancelEdit()">Cancel</button>
+							<button ng-click="clearEdit()">Clear</button>
+						</td>
+					</tr>
+				</table>              
+			</div>
+			
+			<div class="settings-panel" ng-show="showSettingsPanel">
+				<div class="setting-box">
+					<div>FEN</div>
+					<div><textarea ng-model="settings.fen" rows="2"></textarea></div>
+					<div class="ib btn" ng-click="loadFen(settings.fen)">Load</div>
+					<div class="ib btn" ng-click="showFen()">Get</div>
+					
+					<div style="height: 20px"></div>
+					
+					<div>PGN</div>			
+					<div><textarea ng-model="settings.pgn" rows="5"></textarea></div>
+					<div class="ib btn" ng-click="loadPgn(settings.pgn)">Load</div>
+					<div class="ib btn" ng-click="showPgn()">Get</div>
+								
+					<div style="height: 20px"></div>
+													
+					<div class="btn ib" ng-click="setEdit()">Edit Board</div>
+					
+					<div style="height: 20px"></div>
+
+					<div class="ib btn" ng-click="newGame()">New Game</div><div class="ib btn" ng-click="newOnlineGame()">New Online Game</div>
+
+					<div style="height: 20px"></div>
+					
+					<div>CPU Mistakes <input ng-model="settings.mistakePercent" size="3"> %</div>
+
+					<div style="height: 20px"></div>
+					
+					<div>Analyzer Strength <select ng-model="settings.anStrength" ng-options="s for s in anStrengths"
+					ng-change="onStrengthChange('an')"></select>
+</div>
+				</div>											
+				<div class="hide-panel-control">
+					<div class="btn ib" ng-click="toggleSettingsPanel()">Close</div>
+				</div>
+			</div>
+		</div>	
+	</body>
+</html> 

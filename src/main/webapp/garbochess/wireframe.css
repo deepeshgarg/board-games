@@ -1,0 +1,44 @@
+#board-ctnr {
+	height: 430px;
+	width: 400px;
+	border: 1px solid black;
+	display: inline-block;
+}
+
+#movelist-ctnr {
+	height: 430px;
+	width: 200px;
+	border: 1px solid black;
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+}
+
+.analysis-outer {
+	height: 20px;
+	border: 1px solid red;
+	position: absolute;
+	left: 31px;
+	right: 0px;
+	background-color: black;
+
+}
+
+.analysis-inner {
+	height: 100%;
+	width: 40%;
+	border: 0px solid green;
+	background-color: white;
+}
+
+.move-text {
+	height: 20px;
+	width: 30px;
+	border: 1px solid blue;
+}
+
+.ib {
+	display: inline-block;
+	vertical-align: top;
+}
+

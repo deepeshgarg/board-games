@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<script src="js/libgarbochess.js"></script>
+		<script>
+			function testFromSAN() {
+				var gchess = new GarboChess();
+				gchess.GetMoveFromSAN("Nf3");
+			}
+			function testFromString() {
+				var gchess = new GarboChess();
+				gchess.ResetGame();
+				gchess.InitializeFromFen("3rk2r/p6p/1p3p2/8/P1R5/8/n3p1PP/7K b - -");
+				gchess.GetMoveFromString("abcd");
+			}
+		</script>
+	</head>
+	<body>
+		<button onclick="testFromSAN()">Test fromSAN</button>
+		<button onclick="testFromString()">Test fromString</button>
+	</body>
+</html> 

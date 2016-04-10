@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html> 
+	<head> 
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>GarboChess Test</title> 
+		<script type="text/javascript" src="js/libgarbochess.js"></script>
+		<script type="text/javascript">
+			var garboChessW = new GarboChess();
+			var garboChessB = new GarboChess();
+
+			function whiteToMove() {
+				if (garboChessW.g_toMove != garboChessB.g_toMove) {
+					throw "Chess engines out of sync"; 
+				}
+				if (garboChessW.g_toMove == 0) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+
+			function isCheckMate() {
+				if (garboChessW.g_inCheck && garboChessW.GenerateValidMoves().length == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+			function isStaleMate() {
+				if (garboChessW.g_inCheck == false && garboChessW.GenerateValidMoves().length == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+			function reset() {
+				garboChessW.ResetGame();
+				garboChessW.g_timeout = 500;
+				garboChessB.ResetGame();
+				garboChessB.g_timeout = 50;
+			}
+
+			function nextIteration() {
+				if (whiteToMove()) {
+					garboChessW.Search(finishMoveW, 20, null);  
+				} else {
+					garboChessB.Search(finishMoveW, 20, null);  
+				}
+			}
+
+			function finishMove(bestMove, value, timeTaken, ply) {
+				value = garboChess.g_toMove == 0? -value : value;
+				console.log('finish searching: move: ' + bestMove + ' score:' + value + ' time:' + timeTaken + ' ply:' + ply + ' PV:' + garboChess.PVFromHash(bestMove, 15) + ' g_toMove:' + garboChess.g_toMove);
+				console.log('before:' + garboChess.GetFen());
+				garboChess.MakeMove(bestMove);
+				console.log('after:' + garboChess.GetFen());
+			}
+
+			function finishMoveW(bestMove, value, timeTaken, ply) {
+				value = garboChessW.g_toMove == 0? -value : value;
+				console.log('finish searching:  score:' + value + ' time:' + timeTaken + ' ply:' + ply + ' PV:' + garboChessW.PVFromHash(bestMove, 15));
+				garboChessW.MakeMove(bestMove);
+				garboChessB.MakeMove(bestMove);
+
+				console.log('fen:' + garboChessW.GetFen() + " in Check:" + garboChessW.g_inCheck + " " + garboChessW.GenerateValidMoves().length);
+				if (!isCheckMate() && !isStaleMate()) {
+					setTimeout(nextIteration, 10);
+				}
+			}
+		</script> 
+	</head>
+	<body>
+		<button onclick="nextIteration()">Next</button>
+		<button onclick="reset()">Reset</button>
+	</body>
+</html>

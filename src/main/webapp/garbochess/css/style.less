@@ -1,0 +1,280 @@
+@moveTextWidth: 60px;
+@boardContainerWidth: 300px;
+@moveContainerWidth: 300px;
+@containerHeight: 320px;
+@arrowWidth: 40px;
+
+body {
+	background: #5e2424;
+	font-family: arial;
+}
+
+#board-ctnr {
+	height: @containerHeight;
+	width: @boardContainerWidth;
+	border: 1px solid grey;
+	display: block;
+	margin: 0px;
+	padding: 0px;
+}
+
+#movelist-ctnr {
+	/* height: @containerHeight; */
+	width: @moveContainerWidth;
+	border: 1px solid grey;
+	display: inline-block;
+	vertical-align: top;
+	position: absolute;
+	overflow-y: auto;
+	top: @containerHeight + 30;
+	bottom: 0px;
+}
+
+#edit-ctnr {
+	width: @moveContainerWidth;
+	border: 1px solid grey;
+	display: inline-block;
+	vertical-align: top;
+	position: absolute;
+	overflow-y: auto;
+	top: @containerHeight + 30;
+	bottom: 0px;
+}
+
+.cell-class {
+	height: 35px;
+	width: 35px;
+	padding: 0px;
+	margin: 0px;
+}
+
+.cell-class img {
+	width: 100%;
+	height: 100%;
+}
+
+.edit-cell-class {
+	height: 35px;
+	width: 35px;
+	padding: 0px;
+	margin: 0px;
+}
+
+.edit-cell-class img {
+	width: 100%;
+	height: 100%;
+}
+
+
+.board {
+	left: 0px;
+	top: 0px;
+	border-collapse: collapse;
+	/* border : 1px solid red; */
+	margin : 0px;
+	padding: 0px;
+}
+
+.board-cell {
+	margin: 0px;
+	padding: 0px;
+	border: 2px solid black;
+}
+
+.board-cell .even {
+	background : #F7FCC5;
+}
+
+.board-cell .odd {
+	background : #F2C96F;
+}
+
+.vrtns {
+	background : url('../img/vrtns.png') no-repeat;
+	background-position:center; 
+}
+
+.analysis-outer {
+	height: 20px;
+	border: 1px solid grey;
+	position: absolute;
+	left: (@moveTextWidth + 3);
+	right: @arrowWidth;
+	background-color: black;
+}
+
+.analysis-inner {
+	height: 100%;
+	width: 50%;
+	border: 0px solid grey;
+	background-color: #F7FCC5;
+}
+
+.analysis-midline {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 100%;
+	width: 50%;
+	border-right: 1px solid red;
+}
+
+.move-text {
+	height: 20px;
+	width: @moveTextWidth - 1;
+	border: 1px solid grey;
+	font-family: arial;
+	font-size: 10pt;
+	color:white;
+}
+
+.hint {
+	font-family: arial;
+	font-size: 9pt;
+}
+
+.ib {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.arrow {
+	position:absolute;
+	right: 0px;
+	width: @arrowWidth - 2;
+	height: 20px;
+	border:1px solid grey;
+}
+
+.variations {
+	display: block;
+	height: 0px;
+	overflow:hidden;
+	.transition (height 200ms);
+}
+
+.variation {
+	font-family: arial;
+	font-size: 11pt;
+	background: #CEF6F5;
+	border-bottom: 1px solid blue;
+}
+
+.selected {
+	border: 2px solid darkblue;
+}
+
+.transition (@transitionArgument) {
+	transition: @transitionArgument;
+	-moz-transition: @transitionArgument;
+	-webkit-transition: @transitionArgument;
+	-o-transition:  @transitionArgument;
+	
+}
+
+.settings-panel {
+	display:block;
+	position:absolute;
+	top: 0px;
+	bottom:0px;
+	left: 0px;
+	right:0px;
+	color: yellow;
+	background : url("../img/setting-bg.png");
+}
+
+.setting-box {
+	position:absolute;
+	left:3px;
+	right:5px;
+}
+
+.setting-box textarea {
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.show-panel-control {
+	position:absolute;
+	bottom:0px;
+	left:0px;
+	height: 20px;
+	width: 20px;
+	background: url("../img/sttg-o.png");
+	background-size: contain;
+}
+
+.hide-panel-control {
+	position:absolute;
+	bottom:5px;
+	left:2px;
+	height: 20px;
+	width: 20px;
+	/*background: url("../img/sttg-c.png");*/
+	background-size: contain;
+}
+
+.menu {
+	height: 16px;
+	width : 16px;
+	background: url("../../images/common/menu.png");
+	background-size: contain;
+}
+
+.btn {
+	background: yellow;
+	color: brown;
+	border-radius: 5px;
+	border : 2px solid orange;
+	height: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+@media screen and (orientation: landscape) and (min-width: 800px) {
+	@boardContainerWidth: 500px;
+	@moveContainerWidth: 500px;
+
+	#board-ctnr {
+		height: @boardContainerWidth + 20px;
+		width: @boardContainerWidth;
+		border: 1px solid grey;
+		display: block;
+		margin: 0px;
+		padding: 0px;
+	}
+
+	#movelist-ctnr {
+		height: @boardContainerWidth + 15px;
+		border: 1px solid grey;
+		display: inline-block;
+		position: absolute;
+		overflow-y: auto;
+		top: 10px;
+		left: @boardContainerWidth + 10px;
+		right: 0px;
+	}
+
+	#edit-ctnr {
+		height: @boardContainerWidth + 15px;
+		width: 300px;
+		border: 1px solid grey;
+		display: inline-block;
+		vertical-align: top;
+		position: absolute;
+		overflow-y: auto;
+		top: 10px;
+		left: @boardContainerWidth + 10px;
+		right: 0px;
+	}
+
+
+	.cell-class {
+		height: 60px;
+		width: 60px;
+		padding: 0px;
+		margin: 0px;
+	}
+
+
+}

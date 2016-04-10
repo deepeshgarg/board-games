@@ -1,0 +1,25 @@
+.board-ctnr {
+    height:400px;
+    width: 300px;
+    border: 1px solid black;
+    display: inline-block;
+    position: relative;
+}
+
+.white-ctrl {
+	height: 50px;
+	width: 100%;
+	left: 0px;
+	top: 0px;
+	border: 1px solid red;
+	position: absolute;
+}
+
+.black-ctrl {
+	height: 50px;
+	width: 100%;
+	left: 0px;
+	bottom: 0px;
+	border: 1px solid green;
+	position: absolute;
+}

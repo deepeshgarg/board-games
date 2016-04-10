@@ -1,0 +1,84 @@
+@moveWidth: 80px;
+@arrowWidth: 20px;
+@borderColor: grey;
+
+#board-ctnr {
+	height: 430px;
+	width: 400px;
+	border: 1px solid black;
+	display: inline-block;
+}
+
+#movelist-ctnr {
+	height: 430px;
+	width: 200px;
+	border: 1px solid black;
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+}
+
+.movedata-ctnr {
+	border: 1px solid @borderColor;
+}
+
+.blackmove {
+	background-color: grey;
+	color: white;
+}
+
+.whitemove {
+	background-color: white;
+	color: #555;
+}
+
+.analysis-outer {
+	height: 20px;
+	border: 0px solid red;
+	position: absolute;
+	left: @moveWidth + 2;
+	right: @arrowWidth;
+	background-color: black;
+
+}
+
+.analysis-inner {
+	height: 100%;
+	width: 40%;
+	border: 0px solid green;
+	background-color: white;
+}
+
+.move-text {
+	height: 20px;
+	width: @moveWidth;
+	border-right: 1px solid grey;
+}
+
+.ib {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.arrow {
+	position:absolute;
+	right: 0px;
+	width: @arrowWidth - 2;
+	height: 20px;
+	border:1px solid orange;
+}
+
+.variations {
+	display: block;
+	max-height: 0px;
+	overflow:hidden;
+	.transition (max-height 1s);
+}
+
+.transition (@transitionArgument) {
+	transition: @transitionArgument;
+	-moz-transition: @transitionArgument;
+	-webkit-transition: @transitionArgument;
+	-o-transition:  @transitionArgument;
+	
+}

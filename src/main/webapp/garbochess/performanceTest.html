@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<script src="js/libgarbochess.js"></script>
+		<script>
+			function testReset() {
+				var gchess; 
+				var start = new Date();
+				var ctr = 100;
+				for (var i = 0; i < ctr; i++) {
+					var gchess = new GarboChess();
+					gchess.ResetGame();
+				}
+				var end = new Date();
+				console.log("took " + (end.getMilliseconds() - start.getMilliseconds()) + " ms to run reset " + ctr + " times");
+			}
+
+			function testGetSAN() {
+				var gchess = new GarboChess();
+				gchess.ResetGame();
+				var validMoves = gchess.GenerateValidMoves();
+				var start = new Date();
+				var ctr = 10;
+				for (var j = 0; j < ctr; j++) {
+					gchess = new GarboChess();
+					gchess.ResetGame();
+					var validMoves = gchess.GenerateValidMoves();
+					for (var i = 0; i < validMoves.length; i++) {
+						gchess.GetMoveSAN(validMoves[i], validMoves);
+					}
+				}
+				var end = new Date();
+				console.log("took " + (end.getMilliseconds() - start.getMilliseconds()) + " ms to run getSan " + ctr * validMoves.length + " times");
+			}
+		</script>
+	</head>
+	<body>
+		<button onclick="testReset()">Test Reset</button>
+		<button onclick="testGetSAN()">Test getSAN</button>
+	</body>
+</html> 
