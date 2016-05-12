@@ -42,8 +42,8 @@ body {
 }
 
 .cell-class {
-	height: 35px;
-	width: 35px;
+	height: 36px;
+	width: 36px;
 	padding: 0px;
 	margin: 0px;
 }
@@ -78,7 +78,7 @@ body {
 .board-cell {
 	margin: 0px;
 	padding: 0px;
-	border: 2px solid black;
+	border: 1px solid green;
 }
 
 .board-cell .even {
@@ -101,6 +101,14 @@ body {
 	left: (@moveTextWidth + 3);
 	right: @arrowWidth;
 	background-color: black;
+}
+
+.analysis-outer.avl {
+	background-color: black;
+}
+
+.analysis-outer.navl {
+	background-color: #A0A0A0;
 }
 
 .analysis-inner {
@@ -131,6 +139,7 @@ body {
 .hint {
 	font-family: arial;
 	font-size: 9pt;
+	margin-top: 6px;
 }
 
 .ib {
@@ -219,6 +228,23 @@ body {
 	width : 16px;
 	background: url("../../images/common/menu.png");
 	background-size: contain;
+	margin-top: 1px;
+}
+
+.flipboard {
+	height: 16px;
+	width : 16px;
+	background: url("../img/b-w.png");
+	background-size: contain;
+	border: 2px solid orange;
+}
+
+.flipboard.bw {
+	background: url("../img/b-w.png");
+}
+
+.flipboard.wb {
+	background: url("../img/w-b.png");
 }
 
 .btn {
@@ -229,6 +255,16 @@ body {
 	height: 20px;
 	padding-left: 10px;
 	padding-right: 10px;
+}
+
+select {
+	background: #FFF100;
+	color: brown;
+	border-radius: 4px;
+	border : 2px solid orange;
+	height: 20px;
+	padding-left: 1px;
+	padding-right: 1px;
 }
 
 @media screen and (orientation: landscape) and (min-width: 800px) {
@@ -270,8 +306,8 @@ body {
 
 
 	.cell-class {
-		height: 60px;
-		width: 60px;
+		height: 61px;
+		width: 61px;
 		padding: 0px;
 		margin: 0px;
 	}

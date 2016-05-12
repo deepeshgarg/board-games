@@ -20,7 +20,7 @@ GarboChessEngine.prototype.initGame = function (fen) {
 
 GarboChessEngine.prototype.initializeFromFen = function (fen) {
 	var cfen = Chess.FEN.canonical(fen);
-	console.log('cfen:' + cfen);
+	//console.log('cfen:' + cfen);
 	this.garboChess.InitializeFromFen(cfen);
 }
 
@@ -151,7 +151,7 @@ GarboChessEngine.prototype.initWorker = function() {
 		var thiz = this;
 		this.worker = new Worker('js/garbochess-webworker.js');
 		this.worker.onmessage = function(event) {
-			console.log("Resposne received from worker " + event.data);
+			//console.log("Resposne received from worker " + event.data);
 			var response = JSON.parse(event.data);
 			switch (response.type) {
 				case 'analyze' : 
@@ -223,7 +223,7 @@ GarboChessEngine.prototype.moveToGb = function (move) {
 		case "q" : flags |= this.garboChess.moveflagCastleQueen; break;
 	}
 	gbMove |= flags;
-	console.log(gbMove);
+	//console.log(gbMove);
 	return gbMove;
 };
 

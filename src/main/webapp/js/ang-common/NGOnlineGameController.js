@@ -3,6 +3,8 @@ function NGOnlineGameController($scope, $log, ods, $location) {
 	var qs = $location.search();
 	$scope.gameid = qs['gameid'];
 
+	$scope._url = $location.absUrl;
+
 	$scope.$on('$locationChangeSuccess', function () {
 		$log.log('$locationChangeSuccess in subscope changed!', new Date());
 		var qs = $location.search();

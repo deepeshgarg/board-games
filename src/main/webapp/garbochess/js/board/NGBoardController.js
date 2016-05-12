@@ -1,4 +1,4 @@
-var chessApp = angular.module('chessApp',[]);
+var chessApp = angular.module('chessApp',['ngclipboard']);
 
 chessApp.config(['$locationProvider', function($locationProvider) {
         $locationProvider.html5Mode(true);
@@ -157,6 +157,9 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 	}
 
 	$scope.getScoreCellWidth = getScoreCellWidth;
+	$scope.analysisOuterClass = function(score) {
+		return score == null? "navl" : "avl";
+	}
 	//$scope.updateDisplayData = updateDisplayData;
 	
 	$scope.players = ["human", "gb-chess"];
@@ -174,6 +177,7 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 	$scope.settings.mistakePercent = 0;
 	$scope.anStrengths = ["0", 1, 2, 3, 4, 5, 6, 7, 8, 9];
 	$scope.settings.anStrength = "0";
+	$scope.url = "";
 
 	var game = new GarboChessEngine();
 	var analyser = new GarboChessEngine();
@@ -231,11 +235,13 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 		updateDisplayData($scope.currentIndex, root, $scope.displayDataArray, fctns);
 		$scope.saveGame();
 		$scope.hideSettingsPanel();
+		$scope.url = $location.absUrl();
 	}
 	
 	$scope.newOnlineGame = function() {				
 		$scope.newGame();
 		$scope.setNewOnlineGameUrl();
+		$scope.url = $location.absUrl();
 	}
 	
 	$scope.onlineGameWatchCallBack = function(gameid, gamedata) {
@@ -250,6 +256,7 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 		} 
 		updateDisplayData(0, root, $scope.displayDataArray, fctns);
 		fctns.showBoardAtIndex($scope.displayDataArray.length - 1);
+		$scope.next(); //incase of a computer match
 	}
 
 	$scope.saveGame = function() {
@@ -329,6 +336,15 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 		} else {
     			$scope.boardTemplate = "tmpl-up-board";
 		}
+	}
+
+	$scope.toggleFlip = function() {
+		$scope.flipBoard = !$scope.flipBoard;
+		$scope.flipChanged();
+	}
+
+	$scope.flipClass = function() {
+		return $scope.flipBoard?"wb":"bw";
 	}
 
 	$scope.onMouseDown = function ($event, row, col) {
@@ -573,7 +589,7 @@ function DisplayData() {
 	this.moveDisplayText = "";
 	this.moveText = "";
 	this.node = null;
-	this.score = 0;
+	this.score = null;
 	this.variations = [];
 };
 
@@ -583,10 +599,11 @@ function Variation() {
 }
 
 function getScoreCellWidth(score) {
-	if (score > 100) {
+	if (score == null) {
+		score = -100;
+	} else if (score > 100) {
 		score = 100;
-	}
-	else if (score < -100) {
+	} else if (score < -100) {
 		score = -100;
 	}
 

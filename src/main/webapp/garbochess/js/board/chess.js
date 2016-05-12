@@ -320,7 +320,7 @@ Chess.FEN.getCanonical = function (boardModel) {
 
 Chess.PGN = {};
 
-Chess.PGN.pgnmvre = /([BNRQK]?[a-h]?[1-8]?[x]?[a-h][1-8][=]?[bnrq]?)|(O-O(-O)?)/g ;
+Chess.PGN.pgnmvre = /([BNRQK]?[a-h]?[1-8]?[x]?[a-h][1-8][=]?[bnrqBNRQ]?)|(O-O(-O)?)/g ;
 Chess.PGN.sqre = /[a-h][1-8]/g ;
 Chess.PGN.rankre = /[a-h]/ ;
 Chess.PGN.filere = /[1-8]/ ;
@@ -381,7 +381,7 @@ Chess.PGN.selectMove = function (validMoves, p, fen) {
 			}
 		}
 	}
-	console.log(candidateMoves.length + " candidate moves found");
+	//console.log(candidateMoves.length + " candidate moves found");
 	if (candidateMoves.length == 1) {
 		return candidateMoves[0];
 	} else {
@@ -389,7 +389,7 @@ Chess.PGN.selectMove = function (validMoves, p, fen) {
 		for (var i = 0; i < candidateMoves.length; i++) {
 			if ((fromCell.r == -1 || fromCell.r == candidateMoves[i].from.r) &&
 			    (fromCell.c == -1 || fromCell.c == candidateMoves[i].from.c) &&
-			    (p.promotion == "" || p.promotion == candidateMoves[i].promotion)) {
+			    (p.promotion == "" || p.promotion.toUpperCase() == candidateMoves[i].promotion.toUpperCase())) {
 				    return candidateMoves[i];
 			    }
 		}
@@ -413,7 +413,7 @@ Chess.Algebric.fromAlgebricToCell = function (algebric) {
 			cell.c = Chess.Algebric.FILE[s[i]] ;
 		}
 	}
-	console.log(algebric + " " + cell.toString());
+	//console.log(algebric + " " + cell.toString());
 	return cell;
 }
 
@@ -476,14 +476,16 @@ Chess.PGN.parseMove = function (move, wtm) {
 	if (k != null && k.length == 1) {
 		kill = true;
 	}
-	var p = move.match (Chess.PGN.piecere);
-	if (p != null && p.length == 1) {
-		piece = p[0];
-	}
 	p = move.match (Chess.PGN.prmtre);
 	if (p != null && p.length == 1) {
 		promotion = p[0].substr(1,1);
-	}
+		piece = "P";
+	} else {
+		var p = move.match (Chess.PGN.piecere);
+		if (p != null && p.length == 1) {
+			piece = p[0];
+		}
+	}	
 	if (piece == "") {
 		piece = "P";
 	}
