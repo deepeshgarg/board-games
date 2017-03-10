@@ -1,6 +1,6 @@
 function NGBoardBaseController(r, c, $scope, $log) {
     
-	$scope.bm = new Array(r);
+    $scope.bm = new Array(r);
 	
     for (var row = 0; row < r; row++) {
 		$scope.bm[row] = new Array(c);

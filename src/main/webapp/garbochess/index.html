@@ -40,42 +40,10 @@
 		<script src="js/libgarbochess.js"></script>        
 		<script src="js/board/Engine.js"></script>        
 		<script src="js/board/GarboChessEngine.js"></script>
-		<script src="js/board/NGBoardBaseController.js"></script>
+		<script src="../js/ang-common/NGBoardBaseController.js"></script>
 		<script src="../js/ang-common/NGOnlineGameController.js"></script>
 		<script src="../js/ang-common/OnlineGameDataService.js"></script>
-		<script src="js/board/NGBoardController.js"></script>
-		
-
-		<script id="tmpl-board-ctnr" type="text/ng-template">
-			<table border="1" ng-include="boardTemplate" class="board">                
-			</table>
-		</script>
-		<script id="tmpl-up-board" type="text/ng-template">
-			<tr ng-repeat="row in rl" class="board-row">
-				<td class="board-cell" ng-repeat="col in cl"><span ng-include="cellTemplate"></span></td>
-			</tr>
-		</script>
-		<script id="tmpl-down-board" type="text/ng-template">
-			<tr ng-repeat="row in rrl">
-				<td class="board-cell" ng-repeat="col in rcl"><span ng-include="cellTemplate"></span></td>
-			</tr>
-		</script>
-		<script id="tmpl-left-board" type="text/ng-template">
-			<tr ng-repeat="col in rcl">
-				<td ng-repeat="row in rl"><span ng-include="cellTemplate"></span></td>
-			</tr>
-		</script>
-		<script id="tmpl-right-board" type="text/ng-template">
-			<tr ng-repeat="col in cl">
-				<td ng-repeat="row in rrl"><span ng-include="cellTemplate"></span></td>
-			</tr>
-		</script>
-		<script id="tmpl-cell" type="text/ng-template">
-			<div ng-click="onClick($event, row, col)">{{bm[row][col]}}</div>
-		</script>
-		<script id="tmpl-cell-img" type="text/ng-template">
-			<div ng-class="cellClass(row, col)" class="cell-class" ng-mousedown="onMouseDown($event, row, col)" ng-mouseup="onMouseUp($event, row, col)"><img ng-src="{{cellimg(row, col)}}" draggable="false"></img></div>
-		</script>
+		<script src="js/board/GarboChessController.js"></script>
 	</head>
 	<body>
 		<div ng-controller="chessController">
@@ -89,12 +57,10 @@
 					ng-change="onPlayerChange('b')"></select>
 				<select ng-model="bpStrength" ng-options="s for s in strengths"
 					ng-change="onStrengthChange('b')"></select>
-				<!-- <input type="checkbox" ng-model="flipBoard" ng-change="flipChanged()"> -->
 				<span class="ib flipboard" ng-click="toggleFlip()" ng-class="flipClass()"></span>
 				<span class="ib menu" ng-click="toggleSettingsPanel()"></span>
-				<div ng-include="'tmpl-board-ctnr'" style="display:block; position:relative"></div>
+				<div ng-include="'../ang-common-templates/tmpl-board-ctnr.html'" style="display:block; position:relative"></div>
 				<div class="hint">{{getCurrentDD().hint}}</div>
-				<!-- <div>{{fen}}</div> -->
 			</div>
 
 			<div id="movelist-ctnr" ng-hide="editMode">

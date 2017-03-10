@@ -40,23 +40,23 @@ ChessPiece.blackPawnCapture = [new Ray([new Cell(1, -1)]),
 ChessPiece.whitePawnCapture = [new Ray([new Cell(-1, -1)]),
 						   new Ray([new Cell(-1,  1)])];
 						
-ChessPiece.prototype.validMoves = function (r, c, boardModel) {
+ChessPiece.prototype.validMoves = function (r, c, bm) {
 	var validMoves = [];
-	validMoves = validMoves.concat(this.captureMoves(r, c, boardModel));
-	validMoves = validMoves.concat(this.nonCaptureMoves(r, c, boardModel));
+	validMoves = validMoves.concat(this.captureMoves(r, c, bm));
+	validMoves = validMoves.concat(this.nonCaptureMoves(r, c, bm));
 	return validMoves;
 }
 
-ChessPiece.prototype.captureMoves = function (r, c, boardModel) {
-	return BoardUtil.getValidCaptureMoves (new Cell(r, c), boardModel, this.captureRayList, this.isCapture, this.isEmpty);
+ChessPiece.prototype.captureMoves = function (r, c, bm) {
+	return BoardUtil.getValidCaptureMoves (new Cell(r, c), bm, this.captureRayList, this.isCapture, this.isEmpty);
 }
 
-ChessPiece.prototype.nonCaptureMoves = function (r, c, boardModel) {
-	return BoardUtil.getValidNonCaptureMoves (new Cell(r, c), boardModel, this.captureRayList, this.isEmpty);
+ChessPiece.prototype.nonCaptureMoves = function (r, c, bm) {
+	return BoardUtil.getValidNonCaptureMoves (new Cell(r, c), bm, this.captureRayList, this.isEmpty);
 }
 
-ChessPiece.prototype.canMoveFrom = function (r, c, boardModel) {
-	return BoardUtil.getValidNonCaptureMoves (new Cell(r, c), boardModel, this.canMoveFromRayList, this.isEmpty);
+ChessPiece.prototype.canMoveFrom = function (r, c, bm) {
+	return BoardUtil.getValidNonCaptureMoves (new Cell(r, c), bm, this.canMoveFromRayList, this.isEmpty);
 }
 
 ChessPiece.prototype.isEmpty = function (val) {
@@ -86,9 +86,9 @@ function SCChessPiece(type) {
 	this.pieceType = type;
 }
 
-SCChessPiece.prototype.validMoves = function (r, c, boardModel) {
+SCChessPiece.prototype.validMoves = function (r, c, bm) {
 	var validMoves = [];
-	validMoves = validMoves.concat(this.captureMoves(r, c, boardModel));
+	validMoves = validMoves.concat(this.captureMoves(r, c, bm));
 	return validMoves;
 }
 
@@ -196,11 +196,11 @@ SCPieceFactory.prototype.getPiece = function (type) {
 Chess = {};
 Chess.FEN = {};
 
-Chess.FEN.load = function (boardModel, fen) {
+Chess.FEN.load = function (bm, fen) {
 
-	for (var row = 0; row < boardModel.rows; row++) {
-		for (var col = 0; col < boardModel.cols; col++) {
-			boardModel.boardModel[row][col] = " ";
+	for (var row = 0; row < bm.length; row++) {
+		for (var col = 0; col < bm[row].length; col++) {
+			bm[row][col] = " ";
 		}
 	}
 
@@ -211,17 +211,17 @@ Chess.FEN.load = function (boardModel, fen) {
 	var index = 0 ;
 	var len = fen.length ;
 
-	for (var row = 0; row < boardModel.rows && index < len; row++) {
+	for (var row = 0; row < bm.length && index < len; row++) {
 		var c = fen.charAt(index++) ;
 		var col = 0 ;
-		while (c != '/' && col < boardModel.cols) {
+		while (c != '/' && col < bm[row].length) {
 			if (c == ' ') {
 				break;
 			}
 			var skip = 1 ;
 			if (c == 'p' || c == 'P' || c == 'n' || c == 'N' || c == 'b' || c == 'B' || 
 			    c == 'r' || c == 'R' || c == 'q' || c == 'Q' || c == 'k' || c == 'K') {
-				boardModel.setCell(row, col,c) ;
+				bm[row][col] = c ;
 			} else {
 				skip = parseInt(c) ;
 			}
@@ -231,33 +231,33 @@ Chess.FEN.load = function (boardModel, fen) {
 	}
 
 	if (fenTokens.length > 1) {
-		boardModel.toMove = fenTokens[1];
+		bm.toMove = fenTokens[1];
 	}
 
 	if (fenTokens.length > 2) {
-		boardModel.castleAllowed = fenTokens[2];
+		bm.castleAllowed = fenTokens[2];
 	}
 
 	if (fenTokens.length > 3) {
-		boardModel.enPassant = fenTokens[3];
+		bm.enPassant = fenTokens[3];
 	}
 	
 	//var newfen = Chess.FEN.get (boardModel);
 }
 
-Chess.FEN.get = function (boardModel) {
+Chess.FEN.get = function (bm) {
 	var fen = "";
-	for (var row = 0; row < boardModel.rows; row++) {
+	for (var row = 0; row < bm.length; row++) {
 		var count = 0;
-		for (var col = 0; col < boardModel.rows; col++) {
-			if (boardModel.getCell(row, col) == "" || boardModel.getCell(row, col) == " ") {
+		for (var col = 0; col < bm[row].length; col++) {
+			if (bm[row][col] == "" || bm[row][col] == " ") {
 				count++;
 			} else {
-				fen += (count == 0? "" : ("" + count)) + boardModel.getCell(row, col);
+				fen += (count == 0? "" : ("" + count)) + bm[row][col];
 				count = 0;
 			}
 		}
-		if (row < boardModel.rows - 1) {
+		if (row < bm.length - 1) {
 			fen += "/";
 		}
 	}
@@ -314,8 +314,8 @@ Chess.FEN.canonical = function (fen) {
 	return canonicalFen;
 };
 
-Chess.FEN.getCanonical = function (boardModel) {
-	return Chess.FEN.canonical(Chess.FEN.get(boardModel));
+Chess.FEN.getCanonical = function (bm) {
+	return Chess.FEN.canonical(Chess.FEN.get(bm));
 };
 
 Chess.PGN = {};
@@ -370,7 +370,7 @@ Chess.PGN.parse = function (pgn, fen) {
 
 Chess.PGN.selectMove = function (validMoves, p, fen) {
 	var board = new Board(8, 8);
-	Chess.FEN.load(board, fen);
+	Chess.FEN.load(board.boardModel, fen);
 	var candidateMoves = [];
 	var toCell = Chess.Algebric.fromAlgebricToCell(p.to);
 	for (var i = 0; i < validMoves.length; i++) {

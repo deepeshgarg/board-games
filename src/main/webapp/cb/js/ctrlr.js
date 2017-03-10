@@ -1,6 +1,6 @@
 var cbMod = angular.module('cbMod',['myUtilModule']);
 
-function GameController($scope, $log) {
+cbMod.controller('CBGameController', ['$scope', '$log', function ($scope, $log) {
   $scope.log = "log msg";
   $s = $scope;
   
@@ -75,9 +75,53 @@ function GameController($scope, $log) {
 	}
 	return false;
   }
+
+  $s.autoSolve = function() {
+	  var possibleSolutions = [];
+	  for (var i = 0; i <= 9999; i++) {
+		  var ps = ("000" + i).slice(-4);
+		  var duplicate = false;
+		  for (var tn = 0; tn < (ps.length - 1); tn++) {
+		  	for (var cn = tn+1; cn < ps.length; cn++) {
+				if (ps.charAt(tn) == ps.charAt(cn)) {
+					duplicate = true;
+				}
+			}
+		  }
+		  if (!duplicate) {
+		  	possibleSolutions.push(("000" + i).slice(-4));
+		  }
+	  }
+	  var counter = 0;
+	  //while only one possible solution left
+	  while(possibleSolutions.length > 1 && counter < 10) {
+	  	//try a random number from possibleSolutions
+	  	var len = possibleSolutions.length;
+		$s.g = possibleSolutions[Math.floor(Math.random()*len)];
+		$s.try();
+		counter++;
+		//filter possible solutions
+		for (var gcidx = 0; gcidx < $s.gca.length; gcidx++) {
+			var filteredPossibleSolutions = [];
+			for (var psidx = 0; psidx < possibleSolutions.length; psidx++) {
+				var call = $s.ns.match(possibleSolutions[psidx].split(""), $s.gca[gcidx].guess);
+				if (call.c == $s.gca[gcidx].call.c && call.b == $s.gca[gcidx].call.b) {
+					filteredPossibleSolutions.push(possibleSolutions[psidx]);
+				}
+			}
+			possibleSolutions = filteredPossibleSolutions;
+		}
+		$log.log("remaining sol:" + possibleSolutions.length);
+	  }
+	  if (!$s.win() && possibleSolutions.length == 1) {
+		$s.g = possibleSolutions[0];
+		$s.try();
+	  }
+
+  }
   
   $log.log("log test " + $scope.ns.getRandom());
-}
+}]);
 
 function NumberService() {
   

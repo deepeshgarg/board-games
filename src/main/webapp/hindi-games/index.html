@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html ng-app="wordGamesApp">
+	<head>
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+		<style>
+			body {
+				font-family: arial; 
+			}
+			.outer-container {
+				position: absolute;
+				top:0px;
+				left:0px;
+				bottom:0px;
+				right:0px;
+				border:1px solid black;
+			}
+
+			.menu-container {
+				position: relative;
+				top:0px;
+				left:0px;
+				height:30px;
+				border:1px solid black;
+			}
+
+			.main-content-container {
+				position:relative;
+				height:100px;
+				border:1px solid black;
+			}
+
+			.controls-container {
+				position:relative;
+				height:30px;
+				border:1px solid black;
+			}
+
+			.score-container {
+				position:relative;
+				height:70px;
+				border:1px solid black;
+			}
+
+			.skipped-container {
+				position:relative;
+				height:100px;
+				border: 1px solid black;
+				overflow: auto;
+			}
+
+			.menu {
+				margin:auto;
+				width: 170px;
+				border:0px solid black;
+			}
+
+			.content {
+				height:100%;
+			}
+
+			.controls {
+				margin:auto;
+				width: 150px;
+				border:0px solid black;
+			}
+
+			.settings-container {
+				position: absolute;
+				top:0px;
+				left:0px;
+				bottom:0px;
+				right:0px;
+				border:1px solid black;
+				background: white;
+				z-index: 10;
+			}
+
+			button {
+				background: yellow;
+				border: 2px solid brown;
+				border-radius: 5px;
+				margin: 5px;
+			}
+
+		</style>
+
+		<script src="../js/less/1.3.1/less.min.js"></script>
+		<script src="../js/jquery/1.8.2/jquery.min.js"></script>
+		<script src="../js/modernizr.js"></script>
+		<script src="../js/angular/1.3.0/angular.js"></script>
+		<script src="../js/json/json2.js"></script>
+		<script src="js/WordGamesController.js"></script>
+
+	</head>
+	<body>
+		<div class="outer-container" ng-controller="WordGamesController">
+			<div class="menu-container">
+				<div class="menu">
+					<button ng-click="newGame()">New Game</button><button ng-click="toggleSettings()">Settings</button>
+				</div>
+			</div>
+			<div class="main-content-container" ng-click="onCorrect()">
+				<div class="content" ng-style="contentStyle()">
+					<table width="100%" height="100%"> <tr> <td align="center" valign="center"> {{currentQuestion}} </td></tr></table>
+				</div>
+			</div>
+			<div class="controls-container">
+				<div class="controls">
+					<button ng-click="onCorrect()">I Know This</button><button ng-click="onSkip()">Skip</button>
+				</div>
+			</div>
+			<div class="score-container">
+				<table>
+					<tr><td>Correct:</td><td>{{score.correct}}</td></tr>
+					<tr><td>Skipped:</td><td>{{score.skipped}}</td></tr> 
+					<tr><td>Time Remaining:</td><td>{{timeRemaining}}</td></tr>
+				</table>
+			</div>
+			<div class="skipped-container">
+				<div class="skipped">
+					<div ng-repeat="s in score.skippedData">{{s}}</div>
+				</div>
+			</div>
+
+			<div class="settings-container" ng-show="displaySettings">
+				<button ng-click="toggleSettings()">Close</button>
+				<div style="height:20px;"></div>
+				<select ng-model="settings.selectedDataset" ng-options="s for s in settings.datasetSelection"></select>
+				<div style="height:20px;"></div>
+				Game Time: <input ng-model="settings.gametime">
+				<div style="height:20px;"></div>
+				Custom Text:<br><textarea cols="50" rows="10" ng-model="settings.customtext"></textarea><br><button ng-click="setCustom()">Set Custom Text</button>
+			</div>
+		</div>
+	</body>
+</html> 

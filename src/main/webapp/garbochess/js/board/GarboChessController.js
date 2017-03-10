@@ -89,7 +89,7 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 	}
 
 	fctns.showBoard = function() {
-		Chess.FEN.load($scope.board, game.getFen());
+		Chess.FEN.load($scope.bm, game.getFen());
 		$scope.fen = game.getFen();
 	}
 
@@ -117,7 +117,7 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 	 */
 	fctns.showBoardAtIndex = function(index) {
 		var fen =  $scope.displayDataArray[index].fen;
-		Chess.FEN.load($scope.board, fen);
+		Chess.FEN.load($scope.bm, fen);
 		$scope.currentIndex = index;
 		currentNode = $scope.displayDataArray[index].node;
 		game.initGame(fen);
@@ -184,7 +184,7 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 	analyser.setStrength($scope.settings.anStrength);
 	var pendingAnalysis = {};
 
-	Chess.FEN.load($scope.board, game.getFen());
+	Chess.FEN.load($scope.bm, game.getFen());
 	$scope.fen = game.getFen();
 	var currentNode = new ChessNode();
 	currentNode.fen = $scope.fen;
@@ -195,7 +195,9 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 	$scope.currentIndex = 0;
 	updateDisplayData($scope.currentIndex, root, $scope.displayDataArray, fctns);
 
-	$scope.cellTemplate = "tmpl-cell-img";
+	//$scope.cellTemplate = "tmpl-cell-img";
+	$scope.cellTemplate = "../ang-common-templates/tmpl-cell-img.html";
+
 
 	var imgMap = {};
 	imgMap[' '] = "img/blank.png";
@@ -223,7 +225,7 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 		game = new GarboChessEngine();
 		pendingAnalysis = {};
 
-		Chess.FEN.load($scope.board, game.getFen());
+		Chess.FEN.load($scope.bm, game.getFen());
 		$scope.fen = game.getFen();
 		currentNode = new ChessNode();
 		currentNode.fen = $scope.fen;
@@ -367,6 +369,17 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 	}
 	
 	$scope.onClick = function($event, row, col) {
+		if ($scope.editMode) {
+			if ($event.type === "mousedown") {
+				if ($scope.bm[row][col] == $scope.edit.piece) {
+					$scope.bm[row][col] = " ";
+				} else {
+					$scope.bm[row][col] = $scope.edit.piece;
+				}
+			}
+			return;
+		}
+
 		if ($scope.from == null) {
 			$scope.from = new Cell(row, col);
 		} else {
@@ -457,7 +470,7 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 		game.initGame(fen);
 		pendingAnalysis = {};
 
-		Chess.FEN.load($scope.board, game.getFen());
+		Chess.FEN.load($scope.bm, game.getFen());
 		$scope.fen = game.getFen();
 		currentNode = new ChessNode();
 		currentNode.fen = $scope.fen;
@@ -509,8 +522,8 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 		}
 	}
 	$scope.loadEdit = function() {
-		var fen = Chess.FEN.get($scope.board);
-		$log.log(fen);
+		var fen = Chess.FEN.get($scope.bm);
+		//$log.log(fen);
 		var c = $scope.edit.castle;
 		var castleStatus = (c[0]?"k":"") + (c[1]?"q":"") + (c[2]?"K":"") + (c[3]?"Q":"") 
 		fen += " " + $scope.edit.toMove + " " + castleStatus + " -";
