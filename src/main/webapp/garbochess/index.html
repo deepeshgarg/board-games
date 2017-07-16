@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="chessApp">
+<html ng-app="chessApp" manifest="garbochess.appcache">
 	<head>
 	  <base href="/garbochess/">
 	  <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -46,9 +46,11 @@
 		<script src="js/board/GarboChessController.js"></script>
 	</head>
 	<body>
-		<div ng-controller="chessController">
+		<div ng-controller="chessController" id="topleveldiv">
 
-			<div id="board-ctnr">
+			<div id="flex-ctnr">
+
+			<div id="menu-ctnr">
 				<select ng-model="whitePlayer" ng-options="k for k in players"
 					ng-change="onPlayerChange('w')"></select>
 				<select ng-model="wpStrength" ng-options="s for s in strengths"
@@ -59,22 +61,42 @@
 					ng-change="onStrengthChange('b')"></select>
 				<span class="ib flipboard" ng-click="toggleFlip()" ng-class="flipClass()"></span>
 				<span class="ib menu" ng-click="toggleSettingsPanel()"></span>
-				<div ng-include="'../ang-common-templates/tmpl-board-ctnr.html'" style="display:block; position:relative"></div>
-				<div class="hint">{{getCurrentDD().hint}}</div>
 			</div>
+
+			<div id="board-ctnr">
+				<div ng-if="settings.d3d">
+					<svg viewbox="0 0 512 512" preserveAspectRatio="none" style="background-color:#472828">
+						<g stroke="black" stroke-width="1" ng-repeat="r in rarr">
+							<polygon points="{{p1x(r,c)}}, {{p1y(r,c)}} {{p2x(r,c)}}, {{p2y(r,c)}}, {{p3x(r,c)}}, {{p3y(r,c)}}, {{p4x(r,c)}}, {{p4y(r,c)}}" ng-repeat="c in carr" fill="{{fillcolor(r, c)}}"/>
+						</g>
+						<g ng-repeat="r in rarr">
+						<image x="{{pxc(r,c) - 24}}" y="{{pyc(r,c) - 116}}" width="90" height="160" href="{{img(r,c)}}" ng-repeat="c in carr"></image>
+						<g/>
+						<g stroke="transparent" stroke-width="0" ng-repeat="r in rarr">
+							<polygon points="{{p1x(r,c)}}, {{p1y(r,c)}} {{p2x(r,c)}}, {{p2y(r,c)}}, {{p3x(r,c)}}, {{p3y(r,c)}}, {{p4x(r,c)}}, {{p4y(r,c)}}" ng-repeat="c in carr" fill="transparent" ng-mousedown="svgClick($event, r, c)" ng-mouseup="svgClick($event, r, c)""/>
+						</g>
+					</svg>
+
+				</div>
+				<div ng-if="!settings.d3d" ng-include="'../ang-common-templates/tmpl-board-ctnr.html'" style="display:block; position:relative"></div>
+
+			</div>
+
+			<div class="hint">{{getCurrentDD().hint}}</div>
 
 			<div id="movelist-ctnr" ng-hide="editMode">
 				<div ng-repeat="dd in displayDataArray" ng-class="getMoveRowClass($index)">
-					<div class="ib" ng-click="moveClick($index)" style="width:66px;">
-						<div class="ib move-text">{{dd.moveDisplayText}}</div>
-						<div class="ib analysis-outer" ng-class="analysisOuterClass(dd.score)">
-							<div ng-style="{'width': getScoreCellWidth(dd.score)}" 
-								class="analysis-inner"></div>
-							<div class="analysis-midline"></div>
+					<div class="mctnr" ng-click="moveClick($index)">
+						<div class="mt">{{dd.moveDisplayText}}</div>
+						<div class="anl">
+							<svg viewbox="0 0 400 10" preserveAspectRatio="none" width="100%" height="100%" style="background-color:{{analysisOuterColor(dd.score)}}">
+								<rect x="0" y="0" width="{{getScoreCellWidth(dd.score)}}" height="100%" style="fill:#F7FCC5"/>
+								<line style="stroke:red;stroke-width:1" x1="200" y1="0" x2="200" y2="10"/>
+							</svg>
 						</div>
-					</div>
-					<div class="ib arrow" ng-class="vrtnsClass(dd.variations.length)" 
-						ng-click="toggleVariations($event, dd.variations.length)">
+						<div class="vtg" ng-class="vrtnsClass(dd.variations.length)" 
+								 ng-click="toggleVariations($event, dd.variations.length)">
+						</div>
 					</div>
 					<div class="variations">
 						<div class="variation" ng-repeat="vrtn in dd.variations"
@@ -82,10 +104,11 @@
 							{{vrtn.text}}
 						</div>
 					</div>
+
 				</div>
 			</div>
-			
-			<div id="edit-ctnr" ng-show="editMode">
+
+			<div class="edt" ng-show="editMode">
 				<table border="1" class="board">
 					<tr class="board-row">
 						<td class="board-cell edit-cell-class" ng-click="selectEditPiece('k')"><img src="img/king-b.png"></td>
@@ -122,9 +145,14 @@
 					</tr>
 				</table>              
 			</div>
+			</div>
 			
 			<div class="settings-panel" ng-show="showSettingsPanel">
 				<div class="setting-box">
+					<div class="btn ib" ng-click="toggleSettingsPanel()">Close</div>
+
+					<div style="height: 20px"></div>
+
 					<div>FEN</div>
 					<div><textarea ng-model="settings.fen" rows="2"></textarea></div>
 					<div class="ib btn" ng-click="loadFen(settings.fen)">Load</div>
@@ -157,11 +185,12 @@
 					
 					<div>Analyzer Strength <select ng-model="settings.anStrength" ng-options="s for s in anStrengths"
 					ng-change="onStrengthChange('an')"></select>
+
+					<div style="height: 20px"></div>
+
+					<div class="ib btn" ng-click="toggle3d()">{{settings.d3d ? '3D' : '2D'}}</div>
 </div>
 				</div>											
-				<div class="hide-panel-control">
-					<div class="btn ib" ng-click="toggleSettingsPanel()">Close</div>
-				</div>
 			</div>
 		</div>	
 	</body>

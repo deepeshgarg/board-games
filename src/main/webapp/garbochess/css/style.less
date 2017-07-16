@@ -1,12 +1,37 @@
 @moveTextWidth: 60px;
-@boardContainerWidth: 300px;
-@moveContainerWidth: 300px;
-@containerHeight: 320px;
+@boardContainerWidth: 99vw;
+@moveContainerWidth: 99vw;
+@containerHeight: 100vw;
 @arrowWidth: 40px;
+
+
+html {
+	height:100%;
+}
 
 body {
 	background: #5e2424;
 	font-family: arial;
+	padding:0px;
+	margin:0px;
+	height:100%;
+	display:block;
+}
+
+#topleveldiv {
+	height:100%;
+}
+
+#flex-ctnr {
+	display: flex;
+	flex-flow: column;
+	height: 100%;
+}
+
+#menu-ctnr {
+	padding-top:2px;
+	padding-bottom:2px;
+	flex: 0 1 auto;
 }
 
 #board-ctnr {
@@ -16,18 +41,15 @@ body {
 	display: block;
 	margin: 0px;
 	padding: 0px;
+	margin: auto;
+	flex: 0 1 auto;
 }
 
 #movelist-ctnr {
-	/* height: @containerHeight; */
 	width: @moveContainerWidth;
 	border: 1px solid grey;
-	display: inline-block;
-	vertical-align: top;
-	position: absolute;
+	flex: 1 1 auto;
 	overflow-y: auto;
-	top: @containerHeight + 30;
-	bottom: 0px;
 }
 
 #edit-ctnr {
@@ -42,8 +64,8 @@ body {
 }
 
 .cell-class {
-	height: 36px;
-	width: 36px;
+	height: 12.1vw;
+	width: 12.1vw;
 	padding: 0px;
 	margin: 0px;
 }
@@ -139,12 +161,44 @@ body {
 .hint {
 	font-family: arial;
 	font-size: 9pt;
-	margin-top: 6px;
+	margin-top: 3px;
+	min-height:15px;
 }
 
 .ib {
 	display: inline-block;
 	vertical-align: top;
+}
+
+.mctnr {
+	display: flex;
+	flex-flow: row;
+	height: 20px;
+	width: 100%;
+}
+
+.mt {
+	width: 100px;
+	color: white;
+	flex: 0 1 auto;
+}
+
+.anl {
+	border:0px solid black;
+	flex: 1 1 auto;
+	height: 20px;
+}
+
+.vtg {
+	width: 40px;
+	flex: 0 1 auto;
+}
+
+.edt {
+	width: @moveContainerWidth;
+	border: 1px solid grey;
+	overflow-y: auto;
+	flex: 1 1 auto;
 }
 
 .arrow {
@@ -170,7 +224,11 @@ body {
 }
 
 .selected {
-	border: 2px solid darkblue;
+	border: 2px solid blue;
+}
+
+.unselected {
+	border: 2px solid grey;
 }
 
 .transition (@transitionArgument) {
@@ -267,12 +325,13 @@ select {
 	padding-right: 1px;
 }
 
-@media screen and (orientation: landscape) and (min-width: 800px) {
-	@boardContainerWidth: 500px;
-	@moveContainerWidth: 500px;
+@media screen and (orientation: landscape) {
+	@boardContainerWidth: 88vh;
+	@moveContainerWidth: 300px;
+	@containerHeight: 88vh;
 
 	#board-ctnr {
-		height: @boardContainerWidth + 20px;
+		height: @boardContainerWidth;
 		width: @boardContainerWidth;
 		border: 1px solid grey;
 		display: block;
@@ -281,14 +340,14 @@ select {
 	}
 
 	#movelist-ctnr {
-		height: @boardContainerWidth + 15px;
+		height: @boardContainerWidth + 4;
 		border: 1px solid grey;
 		display: inline-block;
 		position: absolute;
 		overflow-y: auto;
 		top: 10px;
-		left: @boardContainerWidth + 10px;
-		right: 0px;
+		left: @boardContainerWidth+1;
+		width:45%;
 	}
 
 	#edit-ctnr {
@@ -304,13 +363,21 @@ select {
 		right: 0px;
 	}
 
+	.edt {
+		height: @boardContainerWidth + 4;
+		border: 1px solid grey;
+		display: inline-block;
+		position: absolute;
+		overflow-y: auto;
+		top: 10px;
+		left: @boardContainerWidth+1;
+		width:45%;
+	}
 
 	.cell-class {
-		height: 61px;
-		width: 61px;
+		height: 10.7vh;
+		width: 10.6vh;
 		padding: 0px;
 		margin: 0px;
 	}
-
-
 }

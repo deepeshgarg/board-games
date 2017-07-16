@@ -178,6 +178,8 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 	$scope.anStrengths = ["0", 1, 2, 3, 4, 5, 6, 7, 8, 9];
 	$scope.settings.anStrength = "0";
 	$scope.url = "";
+	$scope.settings.theme = "classic";
+	$scope.settings.d3d = true;
 
 	var game = new GarboChessEngine();
 	var analyser = new GarboChessEngine();
@@ -334,9 +336,9 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 	$scope.flipChanged = function() {
 		$log.log("fliped " + $scope.flipBoard);
 		if ($scope.flipBoard) {
-    			$scope.boardTemplate = "tmpl-down-board";
+    			$scope.boardTemplate = "../ang-common-templates/tmpl-down-board.html";
 		} else {
-    			$scope.boardTemplate = "tmpl-up-board";
+    			$scope.boardTemplate = "../ang-common-templates/tmpl-up-board.html";
 		}
 	}
 
@@ -413,7 +415,7 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 
 	$scope.toggleVariations = function(evt, num) {
 		var tgt = angular.element(evt.target);
-		var variationsElem = tgt.next(".variations");
+		var variationsElem = tgt.parent().next(".variations");
 		$log.log(variationsElem.height());
 		if (variationsElem.height() == 0) {
 			variationsElem.height(20 * num);
@@ -444,6 +446,8 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 		var classes = "";
 		if (index == $scope.currentIndex) {
 			classes += " " + "selected";
+		} else {
+			classes += " " + "unselected";
 		}
 		return classes;
 	}
@@ -544,7 +548,132 @@ chessApp.controller('chessController', ['onlineGameDataService', '$scope', '$log
 		}
 		var c = $scope.edit.castle; c[0] = false; c[1] = false; c[2] = false; c[3] = false;
 	}
+
+	$scope.toggle3d = function() {
+		$scope.settings.d3d = !$scope.settings.d3d;
+	}
+
 	
+	/* SVG Changes */
+	$scope.W = 512;
+	$scope.H = 450;
+	$scope.sm = 32;
+	$scope.tm = 90;
+	$scope.n = 8;
+	$scope.he = ($scope.H - $scope.tm) / ($scope.n);
+	$scope.ys = [];
+	$scope.xs = [];
+	for (var i = 0; i <= $scope.n; i++) {
+		if (i == 0) {
+			$scope.ys[i] = $scope.tm;	
+		} else {
+			//var hi = i * $scope.he - ($scope.n - i);
+			var hi = i * $scope.he;
+			$scope.ys[i] = $scope.tm + hi;
+		}
+		$scope.xs[i] = $scope.sm*($scope.H - $scope.ys[i])/($scope.H - $scope.tm);
+	}
+
+	$scope.p1x = function(r, c) {
+		return $scope.xs[r] + c*($scope.W - 2*$scope.xs[r])/$scope.n;
+	}
+	$scope.p1y = function(r, c) {
+		return $scope.ys[r];
+	}
+	$scope.p2x = function(r, c) {
+		return $scope.p1x(r, c+1);
+	}
+	$scope.p2y = function(r, c) {
+		return $scope.p1y(r, c);
+	}
+	$scope.p3x = function(r, c) {
+		return $scope.p1x(r + 1, c+1);
+	}
+	$scope.p3y = function(r, c) {
+		return $scope.p1y(r + 1, c);
+	}
+	$scope.p4x = function(r, c) {
+		return $scope.p1x(r + 1, c);
+	}
+	$scope.p4y = function(r, c) {
+		return $scope.p1y(r + 1, c);
+	}
+	$scope.pxc = function(r, c) {
+		return $scope.p1x(r, c) + ($scope.p2x(r,c) - $scope.p1x(r,c))/2
+	}
+	$scope.pyc = function(r, c) {
+		return $scope.p1y(r, c) + ($scope.p2y(r,c) - $scope.p1y(r,c))/2
+	}
+
+	$scope.fillcolor = function(r, c) {
+		r = adjr(r);
+		c = adjc(c);
+		if ($scope.sr >= 0 && $scope.sr == r && $scope.sc == c) {
+			return "#ff9f51";
+		}
+		if ((r + c)%2 == 0) {
+			return "#b3c5cb";
+		} else {
+			return "#096485";
+		}
+	}
+	$scope.img = function(r,c) {
+		r = adjr(r);
+		c = adjc(c);
+		if ($scope.bm[r][c] == "P") { return "img/" + $scope.settings.theme + "/w-pawn.png"; }
+		if ($scope.bm[r][c] == "B") { return "img/" + $scope.settings.theme + "/w-bishop.png"; }
+		if ($scope.bm[r][c] == "R") { return "img/" + $scope.settings.theme + "/w-rook.png"; }
+		if ($scope.bm[r][c] == "N") { return "img/" + $scope.settings.theme + "/w-knight.png"; }
+		if ($scope.bm[r][c] == "K") { return "img/" + $scope.settings.theme + "/w-king.png"; }
+		if ($scope.bm[r][c] == "Q") { return "img/" + $scope.settings.theme + "/w-queen.png"; }
+		if ($scope.bm[r][c] == "p") { return "img/" + $scope.settings.theme + "/b-pawn.png"; }
+		if ($scope.bm[r][c] == "b") { return "img/" + $scope.settings.theme + "/b-bishop.png"; }
+		if ($scope.bm[r][c] == "r") { return "img/" + $scope.settings.theme + "/b-rook.png"; }
+		if ($scope.bm[r][c] == "n") { return "img/" + $scope.settings.theme + "/b-knight.png"; }
+		if ($scope.bm[r][c] == "k") { return "img/" + $scope.settings.theme + "/b-king.png"; }
+		if ($scope.bm[r][c] == "q") { return "img/" + $scope.settings.theme + "/b-queen.png"; }
+		return "img/blank.png";
+	}
+	$scope.rarr = [];
+	for (var i = 0; i < $scope.n; i++) {
+		$scope.rarr.push(i);
+	}
+	$scope.carr = [];
+	for (var i = 0; i < $scope.n; i++) {
+		$scope.carr.push(i);
+	}
+	$scope.sr = -1;
+	$scope.sc = -1;
+	$scope.svgClick = function($event, r, c) {
+		r = adjr(r);
+		c = adjc(c);
+		console.log('svgclick row:' + r + 'col:' + c);
+		$scope.onClick($event, r, c);
+	}
+	$scope.reverse = false;
+	adjr = function(r) {
+		if ($scope.flipBoard) {
+			return $scope.n - r - 1;
+		} else {
+			return r;
+		}
+	}
+	adjc = function(c) {
+		if ($scope.flipBoard) {
+			return $scope.n - c - 1;
+		} else {
+			return c;
+		}
+	}
+
+	/* SVG Changes Ends */
+
+	/* score svg changes starts */
+	$scope.analysisOuterColor = function(score) {
+		return score == null? "#A0A0A0" : "black";
+	}
+	/* score svg changes ends */
+
 	$scope.loadGame();
 }]);
 
